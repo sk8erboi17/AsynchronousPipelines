@@ -67,7 +67,7 @@ Listener listener = Listener.getInstance();
         try {
             serverSocketChannel = AsyncServerSocket.createServer(new InetSocketAddress(8080));
             //Start Listen Clients
-            Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
+    Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
     System.out.println("Client Connected"); // print message indicating a client has connected
 
     // Create an instance of the ReaderStringInputEvent class
