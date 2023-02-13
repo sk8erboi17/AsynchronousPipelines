@@ -1,3 +1,4 @@
+
 # AsynchronousServerClientLib - Overview
 The **AsynchronousServerClientLib** is a powerful library for managing asynchronous communication between clients and servers. With this library, developers can easily create applications that are able to handle multiple client connections and provide fast, asynchronous communication between clients and servers.
 
@@ -20,9 +21,9 @@ In the `startListen` method, the server socket channel is set up to continuously
 
 The `ReadingDataListener` class is an abstract class that provides a framework for reading data from an asynchronous server socket channel. It has a single public method `readData()` which initiates a read operation on the specified asynchronous server socket channel. The method takes two parameters:
 
-1.  `AsynchronousSocketChannel asyncServerSocket`: This is the asynchronous socket channel from which data is to be read.
+ -  `AsynchronousSocketChannel asyncServerSocket`: This is the asynchronous socket channel from which data is to be read.
     
-2.  `ResponseCallback<T> callback`: This is the response callback that is executed once data is read from the socket channel. It takes as a parameter the data that was read and is of the generic type `T`.
+ -  `ResponseCallback<T> callback`: This is the response callback that is executed once data is read from the socket channel. It takes as a parameter the data that was read and is of the generic type `T`.
    
    
 ```sh
@@ -30,12 +31,27 @@ The `ReadingDataListener` class is an abstract class that provides a framework f
 // which is an implementation of the ReadingDataListener class
  ReadingDataListener dataListener = new ReaderStringInputEvent();
 ```
+ List of ReadingDataListener:
+ 
+ - ReaderStringInputEvent
+ - ReadCharInputEvent
+ - ReadDoubleInputEvent
+ - ReaderIntInputEvent
+ - ReadFloatInputEvent
 
 The `WritingDataListener` class is used to handle writing data to a server using an asynchronous socket channel. The class contains methods to handle writing of data, error handling, and checking if the server socket channel is open. The class has an abstract method `writeDataToServer` that should be implemented by concrete implementations of this class to initiate a write operation on the specified asynchronous socket channel. The `handleWrite` method writes the data to the server if the server socket channel is open and not currently writing data.
  ```sh
 // Create an instance of the WriteStringOutputEvent class 
     WriteStringOutputEvent writeStringOutputEvent = new WriteStringOutputEvent();
  ```
+ 
+ List of WritingDataListener:
+ - WriteCharOutputEvent
+ - WriteDoubleOutputEvent
+ - WriteFloatOutputEvent
+ - WriteIntOutputEvent
+ -  WriteStringOutputEvent
+ 
    The `InputEventHandler` interface provides a `handle` method that is used to process incoming data from a connected client, listen for incoming data, and send a response back to the connected client. The `handle` method takes three parameters: an instance of `AsynchronousSocketChannel` representing the server socket for incoming connection requests, an instance of `ReadingDataListener` to listen for incoming data from the connected clients, and an instance of `ResponseCallback` to send the response back to the connected clients. This interface is implemented by the developers to handle incoming events in the server.
   ```sh
  // Create an instance of the InputListener class and handle input data 
