@@ -16,19 +16,20 @@ public class TestServer {
         AsynchronousServerSocketChannel serverSocketChannel;
         try {
             serverSocketChannel = AsyncServerSocket.createServer(new InetSocketAddress(8080));
+            //Start Listen Clients
+            Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
+                System.out.println("Client Connected");
+                ReaderStringInputEvent dataListener = new ReaderStringInputEvent();
+                WriteStringOutputEvent writeStringOutputEvent = new WriteStringOutputEvent();
+                new InputListener<String>().handle(socketChannel, dataListener, System.out::println);
+                new OutputListener<String>().handle(socketChannel,"hello",writeStringOutputEvent);
+
+            });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
-        //Start Listen Clients
-        Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
-            System.out.println("Client Connected");
-            ReaderStringInputEvent dataListener = new ReaderStringInputEvent();
-            WriteStringOutputEvent writeStringOutputEvent = new WriteStringOutputEvent();
-            new InputListener<String>().handle(socketChannel, dataListener, System.out::println);
-            new OutputListener<String>().handle(socketChannel,"hello",writeStringOutputEvent);
 
-        });
     }
 
 
