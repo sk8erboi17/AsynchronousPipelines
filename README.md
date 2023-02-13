@@ -63,7 +63,11 @@ new OutputListener<String>().handle(socketChannel, "hello", writeStringOutputEve
 Listener listener = Listener.getInstance();
 
 // Start the connection listen method with server socket channel and a lambda expression as a parameter
-c -> {
+   AsynchronousServerSocketChannel serverSocketChannel;
+        try {
+            serverSocketChannel = AsyncServerSocket.createServer(new InetSocketAddress(8080));
+            //Start Listen Clients
+            Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
     System.out.println("Client Connected"); // print message indicating a client has connected
 
     // Create an instance of the ReaderStringInputEvent class
@@ -107,12 +111,16 @@ The `SocketThreadIO` class contains a single abstract method, `startThread()`, w
 ```sh
 // Creating a client asynchronous socket channel that connects to the server at the specified host and port  
     AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new  InetSocketAddress("localhost",8080));
+    
  // Creating a SocketReadThread object that reads data from the socket channel 
     SocketThreadIO socketReadThread= new SocketReadThread(socketChannel,1024); 
+    
  // Creating a SocketWriteThread object that writes data to the socket channel  
     SocketThreadIO socketWriteThread = new SocketWriteThread(socketChannel,1024); 
+    
  // Starting the write thread to begin writing data to the socket channel 
     socketWriteThread.startThread(); 
+    
  // Starting the read thread to begin reading data from the socket channel 
     socketReadThread.startThread();
 ```
