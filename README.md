@@ -139,3 +139,6 @@ The `SocketThreadIO` class contains a single abstract method, `startThread()`, w
  // Starting the read thread to begin reading data from the socket channel 
     socketReadThread.startThread();
 ```
+
+ TODO:
+ - Read and Write Custom Object
