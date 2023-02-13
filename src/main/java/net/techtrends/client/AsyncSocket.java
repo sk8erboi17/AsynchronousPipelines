@@ -7,9 +7,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * AsyncSocket is an abstract class that provides a static method for creating a client connection using an AsynchronousSocketChannel.
+ * AsyncSocket is class that provides a static method for creating a client connection using an AsynchronousSocketChannel.
  */
-public abstract class AsyncSocket {
+public class AsyncSocket {
 
     /**
      * Creates a client connection using the specified InetSocketAddress and returns an AsynchronousSocketChannel.

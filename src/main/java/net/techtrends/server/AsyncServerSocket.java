@@ -9,7 +9,7 @@ import java.nio.channels.AsynchronousServerSocketChannel;
  * that supports asynchronous communication.
  */
 
-public abstract class AsyncServerSocket {
+public class AsyncServerSocket {
 
     /**
      * Creates an instance of AsynchronousServerSocketChannel and binds it to the given address.
