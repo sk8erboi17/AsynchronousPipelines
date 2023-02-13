@@ -15,7 +15,7 @@ The `startListen` method in the `Listener` class is responsible for starting the
 The method takes two parameters: a `serverSocketChannel` and a `callback` function.
 The `serverSocketChannel` is an asynchronous socket channel that is used as a server-side socket to listen for incoming connections.
 The `callback` function is executed whenever a new client connects to the server. This function is called for each connected client and is passed the `socketChannel` of the newly connected client.
-In the `startListen` method, the server socket channel is set up to continuously listen for incoming connections using the `accept` method. When a new client connects, the server socket channel returns the client's socket channel and the `callback` function is executed.
+In the `startListen` method, the server socket channel is set up to continuously listen for incoming connections. When a new client connects, the server socket channel returns the client's socket channel and the `callback` function is executed.
 
     listener.startConnectionListen(serverSocketChannel, socketChanne...
 
