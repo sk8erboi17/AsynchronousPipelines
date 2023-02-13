@@ -3,8 +3,6 @@ The **AsynchronousServerClientLib** is a powerful library for managing asynchron
 
  **Getting Start with Server**
 
- There is a simple example of AsynchronousServerClientLib:
-
 
 `Listener` is a class that serves as a starting point for setting up server-client communication in the network. It is responsible for managing the creation and management of the server socket channel and the incoming client socket channels.
 
