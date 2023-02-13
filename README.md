@@ -29,7 +29,7 @@ The `ReadingDataListener` class is an abstract class that provides a framework f
 ```sh
 // Create an instance of the ReaderStringInputEvent class 
 // which is an implementation of the ReadingDataListener class
- ReadingDataListener. dataListener= new ReaderStringInputEvent();
+ ReadingDataListener dataListener = new ReaderStringInputEvent();
 ```
 
 The `WritingDataListener` class is used to handle writing data to a server using an asynchronous socket channel. The class contains methods to handle writing of data, error handling, and checking if the server socket channel is open. The class has an abstract method `writeDataToServer` that should be implemented by concrete implementations of this class to initiate a write operation on the specified asynchronous socket channel. The `handleWrite` method writes the data to the server if the server socket channel is open and not currently writing data.
