@@ -15,8 +15,8 @@ public class TestClient {
             AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost",8080));
             SocketThreadIO socketReadThread= new net.techtrends.client.socket.input.SocketReadThread(socketChannel,1024);
             SocketThreadIO socketWriteThread = new SocketWriteThread(socketChannel,1024);
-            socketWriteThread.startThread();
             socketReadThread.startThread();
+            socketWriteThread.startThread();
 
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
