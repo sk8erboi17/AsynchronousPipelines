@@ -61,9 +61,8 @@ The `WritingDataListener` class is used to handle writing data to a server using
 The `OutputEventHandler` is an interface that defines a contract for handling output events in a server. It provides a way for writing data to a specified asynchronous socket channel and handling any errors that may occur during the writing process. The `handle` method of this interface takes three parameters:
 
 1.  `asyncServerSocket`: The asynchronous socket channel on which the data is going to be written.
-    
 2.  `type`: The type of data that is going to be written.
-    
+   
 3.  `dataListener`: The writing data listener that is used to manage the writing process.
     
 
