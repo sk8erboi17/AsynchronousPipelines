@@ -26,5 +26,10 @@ public class SocketWriteThread extends SocketThreadIO {
             }
         });
         thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+         e.printStackTrace();
+        }
     }
 }
