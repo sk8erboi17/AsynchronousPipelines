@@ -14,14 +14,9 @@ public class SocketReadThread extends SocketThreadIO {
     public void startThread()  {
      Thread thread = new Thread(() -> {
             while (true) {
-                try {
-                    buffer.clear();
-                    socketChannel.read(buffer).get();
-                    buffer.flip();
-                    System.out.println("Messaggio dal server: " + new String(buffer.array(), 0, buffer.limit()));
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+                buffer.clear();
+                socketChannel.read(buffer);
+                buffer.flip();
             }
         });
      thread.start();

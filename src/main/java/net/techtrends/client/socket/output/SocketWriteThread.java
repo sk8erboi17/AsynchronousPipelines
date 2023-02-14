@@ -21,11 +21,7 @@ public class SocketWriteThread extends SocketThreadIO {
                 buffer.clear();
                 buffer.put(message.getBytes());
                 buffer.flip();
-                try {
-                    socketChannel.write(buffer).get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                }
+                socketChannel.write(buffer);
                 buffer.clear();
             }
         });
