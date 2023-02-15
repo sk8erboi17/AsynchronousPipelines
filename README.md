@@ -81,11 +81,8 @@ try {
 }
 ```
 
-The `SocketThreadIO` class serves as a base for reading and writing data to a server using an `AsynchronousSocketChannel` and a `ByteBuffer`. This class provides the basic structure for implementing a reading or writing thread that utilizes asynchronous socket channels for communication.
 
-An asynchronous socket channel is a type of network socket that allows for asynchronous communication, meaning that the socket can handle multiple incoming or outgoing connections at the same time without blocking the main thread. This is useful for implementing high-performance servers that can handle multiple connections simultaneously.
-
-The `SocketThreadIO` class contains a single abstract method, `startThread()`, which must be implemented by subclasses. This method is called to start the reading or writing thread, and it is up to the subclass to determine the logic that will be executed in the thread.
+Code example client with multi output:
 
 ```sh
 try {
