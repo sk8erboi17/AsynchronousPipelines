@@ -1,4 +1,4 @@
-package net.techtrends.server;
+package net.techtrends.general;
 
 import java.nio.channels.AsynchronousSocketChannel;
 

@@ -1,9 +1,6 @@
+import net.techtrends.general.Listener;
+import net.techtrends.general.listeners.input.InputListener;
 import net.techtrends.server.AsyncServerSocket;
-import net.techtrends.server.Listener;
-import net.techtrends.server.events.input.ReaderStringInputEvent;
-import net.techtrends.server.events.output.WriteStringOutputEvent;
-import net.techtrends.server.listeners.input.InputListener;
-import net.techtrends.server.listeners.output.OutputListener;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -19,11 +16,8 @@ public class TestServer {
             //Start Listen Clients
             Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
                 System.out.println("Client Connected");
-                ReaderStringInputEvent dataListener = new ReaderStringInputEvent();
-                WriteStringOutputEvent writeStringOutputEvent = new WriteStringOutputEvent();
-                new InputListener<String>().handle(socketChannel, dataListener, System.out::println);
-                new OutputListener<String>().handle(socketChannel,"hello",writeStringOutputEvent);
-
+                InputListener listener2 = new InputListener();
+                listener2.handle(socketChannel, System.out::println);
             });
         } catch (IOException e) {
             e.printStackTrace();

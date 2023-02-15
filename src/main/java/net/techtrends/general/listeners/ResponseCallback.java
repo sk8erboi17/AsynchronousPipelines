@@ -1,4 +1,4 @@
-package net.techtrends.server.events;
+package net.techtrends.general.listeners;
 
 /**
  * Interface ResponseCallback
@@ -12,10 +12,9 @@ package net.techtrends.server.events;
  * requires the response. When the task is completed, it will call the complete method
  * and pass the response as the argument.
  *
- * @param <T> the type of response to receive
  */
 
-public interface ResponseCallback<T> {
+public interface ResponseCallback {
 
-    void complete(T t);
+    void complete(Object o);
 }

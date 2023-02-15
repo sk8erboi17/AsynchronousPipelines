@@ -1,6 +1,6 @@
+
 import net.techtrends.client.AsyncSocket;
-import net.techtrends.client.socket.SocketThreadIO;
-import net.techtrends.client.socket.output.SocketWriteThread;
+import net.techtrends.general.listeners.output.OutputListener;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,16 +9,22 @@ import java.util.concurrent.ExecutionException;
 
 public class TestClient {
 
-
     public static void main(String[] args) {
         try {
-            AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost",8080));
-            SocketThreadIO socketReadThread= new net.techtrends.client.socket.input.SocketReadThread(socketChannel,1024);
-            SocketThreadIO socketWriteThread = new SocketWriteThread(socketChannel,1024);
-            socketReadThread.startThread();
-            socketWriteThread.startThread();
+            // Create a socket channel and connect to the server
+            AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost", 8080));
 
+            // Create an output listener to handle the server responses
+            OutputListener listener = new OutputListener();
+
+            // Send 10000 messages to the server and wait for a response
+            for (int i = 0; i < 10000; i++) {
+                System.out.println(i);
+                listener.handle(socketChannel, i);
+                Thread.sleep(3);
+            }
         } catch (IOException | ExecutionException | InterruptedException e) {
+            // Handle any exceptions that occur
             e.printStackTrace();
         }
     }
