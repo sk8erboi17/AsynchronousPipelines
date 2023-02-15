@@ -44,22 +44,22 @@ new OutputListener<String>().handle(socketChannel, "hello", writeStringOutputEve
 **Code example complete**
  ```sh
 //Create Server  
-AsynchronousServerSocketChannel serverSocketChannel;  
-try {  
-  serverSocketChannel = AsyncServerSocket.createServer(new InetSocketAddress(8080));  
-    //Start Listen Clients  
-  Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {  
-  System.out.println("Client Connected");  
-        InputListener listener2 = new InputListener();  
-        listener2.handle(socketChannel, new ResponseCallback() {  
-  @Override //You can replace Object with String or Primitives  
-  public void complete(Object o) {  
-  System.out.println(o);  
-            }  
- });  
-    });  
-} catch (IOException e) {  
-  e.printStackTrace();  
+AsynchronousServerSocketChannel serverSocketChannel;
+try {
+  serverSocketChannel = AsyncServerSocket.createServer(new InetSocketAddress(8080));
+  //Start Listen Clients  
+  Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
+    System.out.println("Client Connected");
+    InputListener listener2 = new InputListener();
+    listener2.handle(socketChannel, new ResponseCallback() {
+      @Override //You can replace Object with String or Primitives  
+      public void complete(Object o) {
+        System.out.println(o);
+      }
+    });
+  });
+} catch (IOException e) {
+  e.printStackTrace();
 }
 ```
 
@@ -88,41 +88,43 @@ An asynchronous socket channel is a type of network socket that allows for async
 The `SocketThreadIO` class contains a single abstract method, `startThread()`, which must be implemented by subclasses. This method is called to start the reading or writing thread, and it is up to the subclass to determine the logic that will be executed in the thread.
 
 ```sh
-try {  
+try {
   // Create a new AsynchronousSocketChannel that connects to a server at localhost:8080  
-  AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost", 8080));  
-  
-    // Create a new OutputListener to handle the socket output  
-  OutputListener listener = new OutputListener();  
-  
-    // Create a new thread that will send 600 messages to the server  
-  new Thread(() -> {  
-  for (int i = 0; i < 600; i++) {  
-  System.out.println("Test n " + i);  
-            // Send the message to the server using the OutputListener  
-  listener.handle(socketChannel, "Test n " + i);  
-            try {  
-  Thread.sleep(3);  
-            } catch (InterruptedException e) {  
-  throw new RuntimeException(e);  
-            }  
- } }).start();  
-  
-    // Create a new thread that will send 6000 messages to the server  
-  new Thread(() -> {  
-  for (int i = 0; i < 6000; i++) {  
-  System.out.println(i);  
-            // Send the message to the server using the OutputListener  
-  listener.handle(socketChannel, i);  
-            try {  
-  Thread.sleep(5);  
-            } catch (InterruptedException e) {  
-  throw new RuntimeException(e);  
-            }  
- } }).start();  
-  
-} catch (IOException | ExecutionException | InterruptedException e) {  
-  e.printStackTrace();  
+  AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost", 8080));
+
+  // Create a new OutputListener to handle the socket output  
+  OutputListener listener = new OutputListener();
+
+  // Create a new thread that will send 600 messages to the server  
+  new Thread(() -> {
+    for (int i = 0; i < 600; i++) {
+      System.out.println("Test n " + i);
+      // Send the message to the server using the OutputListener  
+      listener.handle(socketChannel, "Test n " + i);
+      try {
+        Thread.sleep(3);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }).start();
+
+  // Create a new thread that will send 6000 messages to the server  
+  new Thread(() -> {
+    for (int i = 0; i < 6000; i++) {
+      System.out.println(i);
+      // Send the message to the server using the OutputListener  
+      listener.handle(socketChannel, i);
+      try {
+        Thread.sleep(5);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }).start();
+
+} catch (IOException | ExecutionException | InterruptedException e) {
+  e.printStackTrace();
 }
 ```
 
