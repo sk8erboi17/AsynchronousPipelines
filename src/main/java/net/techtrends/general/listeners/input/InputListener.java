@@ -1,6 +1,9 @@
 package net.techtrends.general.listeners.input;
 
-import java.io.IOException;
+import net.techtrends.client.AsyncSocket;
+import net.techtrends.general.Listener;
+import net.techtrends.general.listeners.ResponseCallback;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
@@ -8,81 +11,64 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import net.techtrends.general.Listener;
-import net.techtrends.general.listeners.ResponseCallback;
 
-
-/*
- *
- * This is a concrete implementation of the InputEventHandler interface.
- * It defines methods for handling different types of input data and reading from a ByteBuffer.
- * The handle() method reads data from the socket channel and invokes the appropriate data handling method based on
- * the data type marker byte read from the ByteBuffer.
- * @param <T> the type of data to be read from the socket channel and passed back to the calling code
+/**
+ * The InputListener class is responsible for handling input events and processing
+ * data received through an AsynchronousSocketChannel. It implements the InputEventHandler
+ * interface to provide a way to process various data types such as strings, integers,floats, doubles, and characters.
+ * This class maintains a queue of ByteBuffers for incoming data and provides  methods to handle incoming data based on their types.
+ * It also allows for the option to allocate resources directly if needed.
  */
 public class InputListener implements InputEventHandler {
+    private final AsynchronousSocketChannel socketChannel;
     private final ConcurrentLinkedQueue<ByteBuffer> inputQueue = new ConcurrentLinkedQueue<>();
 
-    private void handleString(ByteBuffer readBuffer, ResponseCallback callback, AsynchronousSocketChannel socketChannel, CompletionHandler<Integer, Object> completionHandler) {
+    public InputListener(AsynchronousSocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
+    }
+
+    private void handleReadCompletion(ByteBuffer readBuffer, CompletionHandler<Integer, Object> completionHandler) {
+        readBuffer.clear();
+        inputQueue.add(readBuffer);
+        socketChannel.read(readBuffer, null, completionHandler);
+    }
+
+    private void handleString(ByteBuffer readBuffer, ResponseCallback callback, CompletionHandler<Integer, Object> completionHandler) {
         CompletableFuture.runAsync(() -> callback.complete(new String(readBuffer.array(), StandardCharsets.UTF_8)))
-                .whenComplete((unused, throwable) -> {
-                    readBuffer.clear();
-                    inputQueue.add(readBuffer);
-                    socketChannel.read(readBuffer, null, completionHandler);
-                });
+                .whenComplete((unused, throwable) -> handleReadCompletion(readBuffer, completionHandler));
     }
 
-    private void handleInt(ByteBuffer readBuffer, ResponseCallback callback, AsynchronousSocketChannel socketChannel, CompletionHandler<Integer, Object> completionHandler) {
+    private void handleInt(ByteBuffer readBuffer, ResponseCallback callback, CompletionHandler<Integer, Object> completionHandler) {
         CompletableFuture.runAsync(() -> callback.complete(readBuffer.getInt()))
-                .whenComplete((unused, throwable) -> {
-                    readBuffer.clear();
-                    inputQueue.add(readBuffer);
-                    socketChannel.read(readBuffer, null, completionHandler);
-                });
-
+                .whenComplete((unused, throwable) -> handleReadCompletion(readBuffer, completionHandler));
     }
 
-    private void handleFloat(ByteBuffer readBuffer, ResponseCallback callback, AsynchronousSocketChannel socketChannel, CompletionHandler<Integer, Object> completionHandler) {
+    private void handleFloat(ByteBuffer readBuffer, ResponseCallback callback, CompletionHandler<Integer, Object> completionHandler) {
         CompletableFuture.runAsync(() -> callback.complete(readBuffer.getFloat()))
-                .whenComplete((unused, throwable) -> {
-                    readBuffer.clear();
-                    inputQueue.add(readBuffer);
-                    socketChannel.read(readBuffer, null, completionHandler);
-                });
+                .whenComplete((unused, throwable) -> handleReadCompletion(readBuffer, completionHandler));
     }
 
-    private void handleDouble(ByteBuffer readBuffer, ResponseCallback callback, AsynchronousSocketChannel socketChannel, CompletionHandler<Integer, Object> completionHandler) {
+    private void handleDouble(ByteBuffer readBuffer, ResponseCallback callback, CompletionHandler<Integer, Object> completionHandler) {
         CompletableFuture.runAsync(() -> callback.complete(readBuffer.getDouble()))
-                .whenComplete((unused, throwable) -> {
-                    readBuffer.clear();
-                    inputQueue.add(readBuffer);
-                    socketChannel.read(readBuffer, null, completionHandler);
-                });
+                .whenComplete((unused, throwable) -> handleReadCompletion(readBuffer, completionHandler));
     }
 
-    private void handleChar(ByteBuffer readBuffer, ResponseCallback callback, AsynchronousSocketChannel socketChannel, CompletionHandler<Integer, Object> completionHandler) {
+    private void handleChar(ByteBuffer readBuffer, ResponseCallback callback, CompletionHandler<Integer, Object> completionHandler) {
         CompletableFuture.runAsync(() -> callback.complete(readBuffer.getChar()))
-                .whenComplete((unused, throwable) -> {
-                    readBuffer.clear();
-                    inputQueue.add(readBuffer);
-                    socketChannel.read(readBuffer, null, completionHandler);
-                });
+                .whenComplete((unused, throwable) -> handleReadCompletion(readBuffer, completionHandler));
     }
 
-    private void handleDefault(AsynchronousSocketChannel socketChannel) {
-        try {
-            socketChannel.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
-    public void handle(AsynchronousSocketChannel socketChannel, ResponseCallback callback) {
-
+    public void handle(boolean allocateDirect, ResponseCallback callback) {
         Listener.getInstance().getExecutors().execute(() -> {
             ByteBuffer readBuffer;
-            inputQueue.add(ByteBuffer.allocate(1024));
+
+            if (allocateDirect) {
+                inputQueue.add(ByteBuffer.allocateDirect(1024));
+            } else {
+                inputQueue.add(ByteBuffer.allocate(1024));
+            }
             while ((readBuffer = inputQueue.poll()) != null) {
 
                 ByteBuffer finalReadBuffer = readBuffer;
@@ -95,22 +81,19 @@ public class InputListener implements InputEventHandler {
                         byte marker = readBuffer.get();
 
                         switch (marker) {
-                            case 0x01 -> handleString(readBuffer, callback, socketChannel, this);
-                            case 0x02 -> handleInt(readBuffer, callback, socketChannel, this);
-                            case 0x03 -> handleFloat(readBuffer, callback, socketChannel, this);
-                            case 0x04 -> handleDouble(readBuffer, callback, socketChannel, this);
-                            case 0x05 -> handleChar(readBuffer, callback, socketChannel, this);
-                            default -> handleDefault(socketChannel);
+                            case 0x01 -> handleString(readBuffer, callback, this);
+                            case 0x02 -> handleInt(readBuffer, callback, this);
+                            case 0x03 -> handleFloat(readBuffer, callback, this);
+                            case 0x04 -> handleDouble(readBuffer, callback, this);
+                            case 0x05 -> handleChar(readBuffer, callback, this);
+                            default -> AsyncSocket.closeSocketChannel(socketChannel);
                         }
                     }
 
                     @Override
                     public void failed(Throwable exc, Object attachment) {
-                        try {
-                            socketChannel.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        System.err.println("Error while sending data: " + exc.getMessage());
+                        AsyncSocket.closeSocketChannel(socketChannel);
                     }
                 });
             }
