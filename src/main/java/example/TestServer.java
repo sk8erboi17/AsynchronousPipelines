@@ -1,3 +1,5 @@
+package example;
+
 import net.techtrends.general.Listener;
 import net.techtrends.general.listeners.ResponseCallback;
 import net.techtrends.general.listeners.input.InputListener;
@@ -17,8 +19,8 @@ public class TestServer {
             //Start Listen Clients
             Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
                 System.out.println("Client Connected");
-                InputListener listener2 = new InputListener();
-                listener2.handle(socketChannel, new ResponseCallback() {
+                InputListener listener2 = new InputListener(socketChannel);
+                listener2.handle(false, new ResponseCallback() {
                     @Override //You can replace Object with String or Primitives
                     public void complete(Object o) {
                         System.out.println(o);
