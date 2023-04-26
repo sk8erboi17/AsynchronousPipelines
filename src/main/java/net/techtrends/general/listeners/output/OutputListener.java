@@ -1,101 +1,127 @@
 package net.techtrends.general.listeners.output;
 
 import net.techtrends.general.Listener;
+import net.techtrends.general.listeners.interfaces.PrimitiveWriter;
+import net.techtrends.general.listeners.interfaces.SendTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
 
-/*
- *
- * This is a concrete implementation of the OututEventHandler interface.
- * It defines methods for handling different types of output data and writing from a ByteBuffer.
- * The handle() method write data from the socket channel and invokes the appropriate data handling method based on
- * the data type marker byte read from the ByteBuffer.
- * @param <T> the type of data to be write from the socket channel and passed back to the calling code
+/**
+ * The OutputListener class is responsible for handling output events and sending
+ * data through an AsynchronousSocketChannel. It implements the OutputEventHandler
+ * interface to provide a way to process and send various data types such as
+ * strings, integers, floats, doubles, and characters.
+ * This class maintains a queue of ByteBuffers for outgoing data and provides
+ * methods to send data based on their types. It also allows for the option to allocate resources directly if needed.
  */
 
 public class OutputListener implements OutputEventHandler {
+    private final AsynchronousSocketChannel socketChannel;
     private final ConcurrentLinkedQueue<ByteBuffer> outputQueue = new ConcurrentLinkedQueue<>();
 
-    private void sendString(String data) {
-        ByteBuffer buffer = ByteBuffer.allocate(2048);
-        buffer.put((byte) 0x01);
-        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
-        buffer.put(bytes);
-        outputQueue.add(buffer);
-    }
-
-    private void sendInt(Integer data) {
-        ByteBuffer buffer = ByteBuffer.allocate(2048);
-        buffer.put((byte) 0x02);
-        byte[] bytes = ByteBuffer.allocate(Integer.BYTES).putInt(data).array();
-        buffer.put(bytes);
-        outputQueue.add(buffer);
-    }
-
-    private void sendFloat(Float data) {
-        ByteBuffer buffer = ByteBuffer.allocate(2048);
-        buffer.put((byte) 0x03);
-        byte[] bytes = ByteBuffer.allocate(Float.BYTES).putFloat(data).array();
-        buffer.put(bytes);
-        outputQueue.add(buffer);
-    }
-
-    private void sendDouble(Double data) {
-        ByteBuffer buffer = ByteBuffer.allocate(2048);
-        buffer.put((byte) 0x04);
-        byte[] bytes = ByteBuffer.allocate(Double.BYTES).putDouble(data).array();
-        buffer.put(bytes);
-        outputQueue.add(buffer);
-    }
-
-    private void sendChar(Character data) {
-        ByteBuffer buffer = ByteBuffer.allocate(2048);
-        buffer.put((byte) 0x05);
-        byte[] bytes = ByteBuffer.allocate(Character.BYTES).putChar(data).array();
-        buffer.put(bytes);
-        outputQueue.add(buffer);
+    public OutputListener(AsynchronousSocketChannel socketChannel) {
+        this.socketChannel = socketChannel;
     }
 
 
-    private void sendOutput(AsynchronousSocketChannel socketChannel) {
-        ByteBuffer buffer;
-        while ((buffer = outputQueue.poll()) != null) {
+    private void sendString(String data, boolean allocateDirect) {
+        send((byte) 0x01, data.getBytes(StandardCharsets.UTF_8), allocateDirect);
+    }
+
+    private void sendInt(Integer data, boolean allocateDirect) throws IOException {
+        send((byte) 0x02, toByteArray(dataOutputStream -> dataOutputStream.writeInt(data)), allocateDirect);
+    }
+
+    private void sendFloat(Float data, boolean allocateDirect) throws IOException {
+        send((byte) 0x03, toByteArray(dataOutputStream -> dataOutputStream.writeFloat(data)), allocateDirect);
+    }
+
+    private void sendDouble(Double data, boolean allocateDirect) throws IOException {
+        send((byte) 0x04, toByteArray(dataOutputStream -> dataOutputStream.writeDouble(data)), allocateDirect);
+    }
+
+    private void sendChar(Character data, boolean allocateDirect) throws IOException {
+        send((byte) 0x05, toByteArray(dataOutputStream -> dataOutputStream.writeChar(data)), allocateDirect);
+    }
+
+    private void send(byte type, byte[] data, boolean allocateDirect) {
+        ByteBuffer buffer = allocateDirect ? ByteBuffer.allocateDirect(2048) : ByteBuffer.allocate(2048);
+        buffer.put(type);
+        buffer.put(data);
+        outputQueue.add(buffer);
+    }
+
+    private byte[] toByteArray(PrimitiveWriter writer) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+        writer.write(dataOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    private void sendOutput() {
+        ByteBuffer buffer = outputQueue.poll();
+
+        if (buffer != null) {
             buffer.flip();
-            try {
-                socketChannel.write(buffer).get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
+            socketChannel.write(buffer, buffer, new CompletionHandler<>() {
+                @Override
+                public void completed(Integer result, ByteBuffer attachment) {
+                    if (attachment.hasRemaining()) {
+                        socketChannel.write(attachment, attachment, this);
+                    } else {
+                        sendOutput();
+                    }
+                }
+
+                @Override
+                public void failed(Throwable exc, ByteBuffer attachment) {
+                    System.err.println("Error while sending data: " + exc.getMessage());
+                    exc.printStackTrace();
+                }
+            });
         }
     }
+
     @Override
-    public void handle(AsynchronousSocketChannel socketChannel,Object data) {
+    public void handle(boolean allocateDirect, Object data) {
         Listener.getInstance().getExecutors().execute(() -> {
-        if (data == null) {
-            throw new IllegalArgumentException("Data cannot be null.");
+            if (data == null) {
+                throw new IllegalArgumentException("Data cannot be null.");
+            }
+            if (!socketChannel.isOpen()) {
+                throw new IllegalStateException("Socket channel is closed.");
+            }
+            if (data instanceof String) {
+                sendString((String) data, allocateDirect);
+            } else if (data instanceof Integer) {
+                handleSend(() -> sendInt((Integer) data, allocateDirect));
+            } else if (data instanceof Float) {
+                handleSend(() -> sendFloat((Float) data, allocateDirect));
+            } else if (data instanceof Double) {
+                handleSend(() -> sendDouble((Double) data, allocateDirect));
+            } else if (data instanceof Character) {
+                handleSend(() -> sendChar((Character) data, allocateDirect));
+            } else {
+                throw new IllegalArgumentException("Invalid data type: " + data.getClass().getName());
+            }
+            sendOutput();
+        });
+    }
+
+    private void handleSend(SendTask sendTask) {
+        try {
+            sendTask.execute();
+        } catch (IOException e) {
+            System.err.println("Error while sending data: " + e.getMessage());
+            e.printStackTrace();
         }
-        if (!socketChannel.isOpen()) {
-            throw new IllegalStateException("Socket channel is closed.");
-        }
-        if (data instanceof String) {
-            sendString((String) data);
-        } else if (data instanceof Integer) {
-            sendInt((Integer) data);
-        } else if (data instanceof Float) {
-            sendFloat((Float) data);
-        } else if (data instanceof Double) {
-            sendDouble((Double) data);
-        } else if (data instanceof Character) {
-            sendChar((Character) data);
-        } else {
-            throw new IllegalArgumentException("Invalid data type: " + data.getClass().getName());
-        }
-       sendOutput(socketChannel);
-    });
-}
+    }
 
 }

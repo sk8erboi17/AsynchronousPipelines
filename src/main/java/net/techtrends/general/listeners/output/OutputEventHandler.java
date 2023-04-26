@@ -1,28 +1,24 @@
 package net.techtrends.general.listeners.output;
 
-import net.techtrends.general.listeners.ResponseCallback;
-
-import java.nio.channels.AsynchronousSocketChannel;
-
-
-/*
- *    This is an interface representing an event handler for output events from an AsynchronousSocketChannel.
- *    It provides a single method handle() that takes an AsynchronousSocketChannel, a data, a ResponseCallback as parameters.
- *    The method is responsible for writing data from the socket channel and invoking the appropriate ResponseCallback
- *    method to pass the data back to the calling code.
- *    @param <T> the type of data to be read from the socket channel and passed back to the calling code
+/**
+ * The OutputEventHandler interface represents a contract for handling output events.
+ * Implementing classes should define their behavior for processing and sending output
+ * data by providing an implementation for the handle() method.
+ * This interface is especially useful when working with systems that require output data
+ * to be sent or processed in different ways.
  */
-
 public interface OutputEventHandler {
 
-    /**
-     * Handles output operations on the socket channel, sending the given value to the
-     * client and invoking the provided callback when the operation is complete.
-     *
-     * @param socketChannel the socket channel to write data to
-     * @param value the value to send to the client
-     */
 
-    void handle(AsynchronousSocketChannel socketChannel, Object value);
+    /**
+     * Handles an output event with the given parameters.
+     *
+     * @param allocateDirect A boolean value that indicates whether the event should allocate resources directly.
+     *                       If true, the implementing class should allocate resources directly for processing the event.
+     *                       If false,the implementing class should use a different method for resource allocation.
+     * @param value          The Object representing the data to be output by the event handler.
+     *                       This can be any type of data, such as a string, number, or custom object, depending on the requirements of the implementing class.
+     */
+    void handle(boolean allocateDirect, Object value);
 
 }
