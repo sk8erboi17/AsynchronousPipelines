@@ -32,7 +32,7 @@ public class TestClientSingleThread {
             for (int i = 0; i < 500; i++) {
                 String message = "Test".concat(String.valueOf(i));
                 System.out.println(message);
-                listener.sendString(message, new ResponseCallback() {
+                listener.sendStringSanitized(message, new ResponseCallback() {
                     @Override
                     public void complete(Object o) {
                         System.out.println("SUCCESS");
