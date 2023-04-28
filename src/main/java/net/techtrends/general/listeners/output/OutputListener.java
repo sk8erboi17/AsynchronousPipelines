@@ -55,7 +55,7 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     public void sendString(String data, ResponseCallback callback) {
         byte marker = 0x01;
         byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
-        int dataSize = bytes.length + 1; // aggiungi 1 per il carattere di terminazione
+        int dataSize = bytes.length + 1;
         if (dataSize > outputBuffer.capacity()) {
             outputBuffer = expandByteBuffer(dataSize);
         }
@@ -179,6 +179,32 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         }
     }
 
+    public void sendStringSanitized(String data, ResponseCallback callback) {
+        byte marker = 0x07;
+        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+        int dataSize = bytes.length + 1;
+        if (dataSize > outputBuffer.capacity()) {
+            outputBuffer = expandByteBuffer(dataSize);
+        }
+        outputBuffer.clear();
+        outputBuffer.put(marker);
+        outputBuffer.put(bytes);
+        outputBuffer.put((byte) 0);
+        outputBuffer.flip();
+
+        if (socketChannel.isOpen()) {
+            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
+                if (throwable != null || !result) {
+                    callback.completeExceptionally(throwable);
+                    AsyncSocket.closeSocketChannel(socketChannel);
+                } else {
+                    callback.complete(true);
+                }
+            });
+        } else {
+            AsyncSocket.closeSocketChannel(socketChannel);
+        }
+    }
 
 
 

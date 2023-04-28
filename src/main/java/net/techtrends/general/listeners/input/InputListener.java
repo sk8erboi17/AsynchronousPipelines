@@ -66,7 +66,7 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
             buffer.flip();
             byte marker = buffer.get();
-            if (marker >= 0x01 && marker <= 0x06) {
+            if (marker >= 0x01 && marker <= 0x07) {
                 switch (marker) {
                     case 0x01 -> handleString(buffer, responseCallback);
                     case 0x02 -> handleInt(buffer, responseCallback);
@@ -74,6 +74,7 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
                     case 0x04 -> handleDouble(buffer, responseCallback);
                     case 0x05 -> handleChar(buffer, responseCallback);
                     case 0x06 -> handleByteArray(buffer, responseCallback);
+                    case 0x07 -> handleStringSanitized(buffer, responseCallback);
                 }
             } else {
                 AsyncSocket.closeSocketChannel(socketChannel);
@@ -87,11 +88,17 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
     private void handleString(ByteBuffer buffer, ResponseCallback callback) {
         String data = StandardCharsets.UTF_8.decode(buffer).toString();
+        CompletableFuture.runAsync(() -> callback.complete(data), executorService);
+    }
+
+    private void handleStringSanitized(ByteBuffer buffer, ResponseCallback callback) {
+        String data = StandardCharsets.UTF_8.decode(buffer).toString();
 
         String sanitizedData = sanitizeString(data);
 
         CompletableFuture.runAsync(() -> callback.complete(sanitizedData), executorService);
     }
+
 
     private String sanitizeString(String data) {
         String allowedCharactersRegex = "[^A-Za-z0-9]+";
