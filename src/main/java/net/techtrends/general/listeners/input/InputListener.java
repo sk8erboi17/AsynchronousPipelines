@@ -47,16 +47,22 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
             return;
         }
         if (bytesRead > 0) {
+
             if (buffer.remaining() < maxBufferSize && buffer.capacity() < maxBufferSize) {
-                ByteBuffer newBuffer = buffer.isDirect() ? ByteBuffer.allocateDirect(Math.min(buffer.capacity() * 2, maxBufferSize)) : ByteBuffer.allocate(Math.min(buffer.capacity() * 2, maxBufferSize));
-                buffer.flip();
-                newBuffer.put(buffer);
-                inputBuffer = newBuffer;
+                double bufferUsagePercentage = (double) buffer.position() / buffer.capacity();
+                System.out.println(bufferUsagePercentage);
+                if (bufferUsagePercentage >= 0.75) {
+                    ByteBuffer newBuffer = buffer.isDirect() ? ByteBuffer.allocateDirect(Math.min(buffer.capacity() * 2, maxBufferSize)) : ByteBuffer.allocate(Math.min(buffer.capacity() * 2, maxBufferSize));
+                    buffer.flip();
+                    newBuffer.put(buffer);
+                    inputBuffer = newBuffer;
+                }
             } else {
                 AsyncSocket.closeSocketChannel(socketChannel);
                 System.out.println("Packet rejected: buffer size exceeds maxBufferSize!");
                 return;
             }
+
 
             buffer.flip();
             byte marker = buffer.get();
@@ -74,22 +80,24 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
                 System.out.println("Invalid marker received!");
             }
             buffer.clear();
+            inputBuffer.clear();
         }
         socketChannel.read(inputBuffer, inputBuffer, this);
     }
 
     private void handleString(ByteBuffer buffer, ResponseCallback callback) {
         String data = StandardCharsets.UTF_8.decode(buffer).toString();
-        if (validateString(data)) {
-            CompletableFuture.runAsync(() -> callback.complete(data), executorService);
-        } else {
-            System.out.println("Invalid string data received!");
-        }
+
+        String sanitizedData = sanitizeString(data);
+
+        CompletableFuture.runAsync(() -> callback.complete(sanitizedData), executorService);
     }
-    private boolean validateString(String data) {
-        String allowedCharactersRegex = "^[a-zA-Z0-9]+$";
-        return data.matches(allowedCharactersRegex);
+
+    private String sanitizeString(String data) {
+        String allowedCharactersRegex = "[^A-Za-z0-9]+";
+        return data.replaceAll(allowedCharactersRegex, "");
     }
+
 
     private void handleInt(ByteBuffer buffer, ResponseCallback callback) {
         int data = buffer.getInt();

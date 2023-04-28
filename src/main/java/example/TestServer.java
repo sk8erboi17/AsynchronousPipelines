@@ -32,7 +32,7 @@ public class TestServer {
 
             Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
                 System.out.println("Client Connected");
-                InputListener inputListener = new InputListener(socketChannel,  true,1024,2048,createInputListenerResponseCallback(socketChannel));
+                InputListener inputListener = new InputListener(socketChannel,  true,1024,4192,createInputListenerResponseCallback(socketChannel));
                 inputListener.start();
                 Runtime.getRuntime().addShutdownHook(new Thread(() ->{
                     System.out.println("Server shutdown");

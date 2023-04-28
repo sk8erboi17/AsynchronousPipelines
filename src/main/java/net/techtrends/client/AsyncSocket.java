@@ -20,22 +20,23 @@ public class AsyncSocket {
     }
 
     public static void closeSocketChannel(AsynchronousSocketChannel socketChannel) {
-        try {
-            socketChannel.shutdownInput();
-        } catch (IOException e) {
-            System.err.println("Failed to shutdown input socket channel: " + e.getMessage());
+        if(socketChannel != null && socketChannel.isOpen()) {
+            try {
+                socketChannel.shutdownInput();
+            } catch (IOException e) {
+                System.err.println("Failed to shutdown input socket channel: " + e.getMessage());
+            }
+            try {
+                socketChannel.shutdownOutput();
+            } catch (IOException e) {
+                System.err.println("Failed to shutdown output socket channel: " + e.getMessage());
+            }
+            try {
+                socketChannel.close();
+            } catch (IOException e) {
+                System.err.println("Failed to close socket channel: " + e.getMessage());
+            }
         }
-        try {
-            socketChannel.shutdownOutput();
-        } catch (IOException e) {
-            System.err.println("Failed to shutdown output socket channel: " + e.getMessage());
-        }
-        try {
-            socketChannel.close();
-        } catch (IOException e) {
-            System.err.println("Failed to close socket channel: " + e.getMessage());
-        }
-
     }
 
 

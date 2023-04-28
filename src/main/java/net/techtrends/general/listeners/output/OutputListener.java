@@ -21,9 +21,9 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     private final AsynchronousSocketChannel socketChannel;
     private ByteBuffer outputBuffer;
 
-    public OutputListener(AsynchronousSocketChannel socketChannel, boolean allocateDirect) {
+    public OutputListener(AsynchronousSocketChannel socketChannel, int initialBufferSize, boolean allocateDirect) {
         this.socketChannel = socketChannel;
-        int initialBufferSize = 1024;
+
         if (allocateDirect) {
             this.outputBuffer = ByteBuffer.allocateDirect(initialBufferSize);
         } else {

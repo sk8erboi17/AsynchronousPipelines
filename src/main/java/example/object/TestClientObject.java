@@ -23,7 +23,7 @@ public class TestClientObject {
         try {
             AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost", 8080));
 
-            OutputListener listener = new OutputListener(socketChannel, true);
+            OutputListener listener = new OutputListener(socketChannel, 2048,true);
             User user = new User(UUID.randomUUID(), 2);
             listener.sendByteArray(ObjectUtils.objectToByteArray(user), new ResponseCallback() {
                 @Override

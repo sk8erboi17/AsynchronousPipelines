@@ -26,20 +26,22 @@ public class TestClientMultiThread {
     public static void main(String[] args) {
         try {
             AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost", 8080));
+            OutputListener outputListener1 = new OutputListener(socketChannel, 2048,true);
+            OutputListener outputListener2 = new OutputListener(socketChannel, 2048,true);
 
             Runnable thread1 = () -> {
                 for (int i = 0; i < 600; i++) {
                     System.out.println("Test n " + i);
-                    new OutputListener(socketChannel, true).sendInt(i, createResponseCallback("Thread #1"));
-                    sleep(20);
+                    sleep(100);
+                    outputListener1.sendInt(i,createResponseCallback("Thread 1"));
                 }
             };
 
             Runnable thread2 = () -> {
                 for (int i = 0; i < 6000; i++) {
                     System.out.println(i);
-                    new OutputListener(socketChannel, true).sendInt(i, createResponseCallback("Thread #2"));
-                    sleep(45);
+                    outputListener2.sendInt(i,createResponseCallback("Thread 2"));
+                    sleep(200);
                 }
             };
 
@@ -61,6 +63,7 @@ public class TestClientMultiThread {
             @Override
             public void completeExceptionally(Throwable throwable) {
                 System.out.println(threadName + " - FAILED");
+                throwable.printStackTrace();
             }
         };
     }
