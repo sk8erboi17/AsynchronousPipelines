@@ -1,20 +1,19 @@
 package net.techtrends.general.listeners;
 
 /**
- * Interface ResponseCallback
- * The ResponseCallback interface is used to complete a task and receive a response.
- * The interface provides a single method "complete" that takes a generic parameter T.
- * The purpose of the interface is to provide a callback mechanism to receive a response
- * after a task is completed. This is useful for asynchronous operations where the result
- * may not be immediately available.
- * To use the interface, create a class that implements the interface and overrides the
- * complete method. Then pass an instance of the implementation class to the task that
- * requires the response. When the task is completed, it will call the complete method
- * and pass the response as the argument.
- *
+ * This is an interface named "ResponseCallback". It contains two methods:
+ * <p>
+ * 1. complete(Object o) - This method is called when the task is completed successfully.
+ * <p>
+ * 2. completeExceptionally(Throwable throwable) - This method is called when an exception is encountered during the execution of the task.
+ * <p>
+ * The purpose of this interface is to provide a way to handle the result of an asynchronous task and any errors that may occur during its execution.
+ * It can be used in various contexts such as network communication, database operations, or any other long-running tasks.
  */
 
 public interface ResponseCallback {
 
     void complete(Object o);
+
+    void completeExceptionally(Throwable throwable);
 }

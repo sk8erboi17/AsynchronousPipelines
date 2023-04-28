@@ -21,12 +21,12 @@ public class Listener {
      * @param serverSocketChannel The server socket channel to listen on.
      * @param connectionRequest   The callback to accept incoming connections.
      */
-    public void startConnectionListen(AsynchronousServerSocketChannel serverSocketChannel, OnConnectionRequest connectionRequest) {
+    public void startConnectionListen(AsynchronousServerSocketChannel serverSocketChannel, ConnectionRequest connectionRequest) {
         executors.execute(() -> serverSocketChannel.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
             @Override
             public void completed(AsynchronousSocketChannel socketChannel, Void attachment) {
                 connectionRequest.acceptConnection(socketChannel);
-                serverSocketChannel.accept(null, this); // accetta la prossima connessione
+                serverSocketChannel.accept(null, this);
             }
 
             @Override
@@ -43,10 +43,6 @@ public class Listener {
 
     public static Listener getInstance() {
         return instanceListener;
-    }
-
-    public ExecutorService getExecutors() {
-        return executors;
     }
 
 }
