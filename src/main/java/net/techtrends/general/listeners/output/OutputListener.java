@@ -1,127 +1,226 @@
 package net.techtrends.general.listeners.output;
 
-import net.techtrends.general.Listener;
-import net.techtrends.general.listeners.interfaces.PrimitiveWriter;
-import net.techtrends.general.listeners.interfaces.SendTask;
+import net.techtrends.client.AsyncSocket;
+import net.techtrends.general.listeners.ResponseCallback;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
- * The OutputListener class is responsible for handling output events and sending
- * data through an AsynchronousSocketChannel. It implements the OutputEventHandler
- * interface to provide a way to process and send various data types such as
- * strings, integers, floats, doubles, and characters.
- * This class maintains a queue of ByteBuffers for outgoing data and provides
- * methods to send data based on their types. It also allows for the option to allocate resources directly if needed.
+ * The OutputListener class is responsible for sending output events and data
+ * through an AsynchronousSocketChannel. It implements the CompletionHandler
+ * interface to provide a way to process and send data through the channel.
+ * This class maintains a ByteBuffer for outgoing data and provides a method to
+ * write the data when it is available.
  */
-
-public class OutputListener implements OutputEventHandler {
+public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     private final AsynchronousSocketChannel socketChannel;
-    private final ConcurrentLinkedQueue<ByteBuffer> outputQueue = new ConcurrentLinkedQueue<>();
+    private ByteBuffer outputBuffer;
 
-    public OutputListener(AsynchronousSocketChannel socketChannel) {
+    public OutputListener(AsynchronousSocketChannel socketChannel, boolean allocateDirect) {
         this.socketChannel = socketChannel;
+        int initialBufferSize = 1024;
+        if (allocateDirect) {
+            this.outputBuffer = ByteBuffer.allocateDirect(initialBufferSize);
+        } else {
+            this.outputBuffer = ByteBuffer.allocate(initialBufferSize);
+        }
     }
 
 
-    private void sendString(String data, boolean allocateDirect) {
-        send((byte) 0x01, data.getBytes(StandardCharsets.UTF_8), allocateDirect);
-    }
+    public void sendInt(int data, ResponseCallback callback) {
+        byte marker = 0x02;
+        outputBuffer.clear();
+        outputBuffer.put(marker);
+        outputBuffer.putInt(data);
+        outputBuffer.flip();
 
-    private void sendInt(Integer data, boolean allocateDirect) throws IOException {
-        send((byte) 0x02, toByteArray(dataOutputStream -> dataOutputStream.writeInt(data)), allocateDirect);
-    }
-
-    private void sendFloat(Float data, boolean allocateDirect) throws IOException {
-        send((byte) 0x03, toByteArray(dataOutputStream -> dataOutputStream.writeFloat(data)), allocateDirect);
-    }
-
-    private void sendDouble(Double data, boolean allocateDirect) throws IOException {
-        send((byte) 0x04, toByteArray(dataOutputStream -> dataOutputStream.writeDouble(data)), allocateDirect);
-    }
-
-    private void sendChar(Character data, boolean allocateDirect) throws IOException {
-        send((byte) 0x05, toByteArray(dataOutputStream -> dataOutputStream.writeChar(data)), allocateDirect);
-    }
-
-    private void send(byte type, byte[] data, boolean allocateDirect) {
-        ByteBuffer buffer = allocateDirect ? ByteBuffer.allocateDirect(2048) : ByteBuffer.allocate(2048);
-        buffer.put(type);
-        buffer.put(data);
-        outputQueue.add(buffer);
-    }
-
-    private byte[] toByteArray(PrimitiveWriter writer) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
-        writer.write(dataOutputStream);
-        return byteArrayOutputStream.toByteArray();
-    }
-
-    private void sendOutput() {
-        ByteBuffer buffer = outputQueue.poll();
-
-        if (buffer != null) {
-            buffer.flip();
-            socketChannel.write(buffer, buffer, new CompletionHandler<>() {
-                @Override
-                public void completed(Integer result, ByteBuffer attachment) {
-                    if (attachment.hasRemaining()) {
-                        socketChannel.write(attachment, attachment, this);
-                    } else {
-                        sendOutput();
-                    }
-                }
-
-                @Override
-                public void failed(Throwable exc, ByteBuffer attachment) {
-                    System.err.println("Error while sending data: " + exc.getMessage());
-                    exc.printStackTrace();
+        if (socketChannel.isOpen()) {
+            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
+                if (throwable != null || !result) {
+                    callback.completeExceptionally(throwable);
+                    AsyncSocket.closeSocketChannel(socketChannel);
+                } else {
+                    callback.complete(true);
                 }
             });
+        } else {
+            AsyncSocket.closeSocketChannel(socketChannel);
+        }
+    }
+    public void sendString(String data, ResponseCallback callback) {
+        byte marker = 0x01;
+        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+        int dataSize = bytes.length + 1; // aggiungi 1 per il carattere di terminazione
+        if (dataSize > outputBuffer.capacity()) {
+            outputBuffer = expandByteBuffer(dataSize);
+        }
+        outputBuffer.clear();
+        outputBuffer.put(marker);
+        outputBuffer.put(bytes);
+        outputBuffer.put((byte) 0);
+        outputBuffer.flip();
+
+        if (socketChannel.isOpen()) {
+            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
+                if (throwable != null || !result) {
+                    callback.completeExceptionally(throwable);
+                    AsyncSocket.closeSocketChannel(socketChannel);
+                } else {
+                    callback.complete(true);
+                }
+            });
+        } else {
+            AsyncSocket.closeSocketChannel(socketChannel);
+        }
+    }
+
+    public void sendFloat(float data, ResponseCallback callback) {
+        byte marker = 0x03;
+        int dataSize = Float.BYTES;
+        if (dataSize > outputBuffer.capacity()) {
+            outputBuffer = expandByteBuffer(dataSize);
+        }
+        outputBuffer.clear();
+        outputBuffer.put(marker);
+        outputBuffer.putFloat(data);
+        outputBuffer.flip();
+
+        if (socketChannel.isOpen()) {
+            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
+                if (throwable != null || !result) {
+                    callback.completeExceptionally(throwable);
+                    AsyncSocket.closeSocketChannel(socketChannel);
+                } else {
+                    callback.complete(true);
+                }
+            });
+        } else {
+            AsyncSocket.closeSocketChannel(socketChannel);
+        }
+    }
+
+    public void sendDouble(double data, ResponseCallback callback) {
+        byte marker = 0x04;
+        int dataSize = Double.BYTES;
+        if (dataSize > outputBuffer.capacity()) {
+            outputBuffer = expandByteBuffer(dataSize);
+        }
+        outputBuffer.clear();
+        outputBuffer.put(marker);
+        outputBuffer.putDouble(data);
+        outputBuffer.flip();
+
+        if (socketChannel.isOpen()) {
+            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
+                if (throwable != null || !result) {
+                    callback.completeExceptionally(throwable);
+                    AsyncSocket.closeSocketChannel(socketChannel);
+                } else {
+                    callback.complete(true);
+                }
+            });
+        } else {
+            AsyncSocket.closeSocketChannel(socketChannel);
+        }
+    }
+
+
+    public void sendChar(char data, ResponseCallback callback) {
+        byte marker = 0x05;
+        int dataSize = Character.BYTES;
+        if (dataSize > outputBuffer.capacity()) {
+            outputBuffer = expandByteBuffer(dataSize);
+        }
+        outputBuffer.clear();
+        outputBuffer.put(marker);
+        outputBuffer.putChar(data);
+        outputBuffer.flip();
+        if (socketChannel.isOpen()) {
+            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
+                if (throwable != null || !result) {
+                    callback.completeExceptionally(throwable);
+                    AsyncSocket.closeSocketChannel(socketChannel);
+                } else {
+                    callback.complete(true);
+                }
+            });
+        } else {
+            AsyncSocket.closeSocketChannel(socketChannel);
+        }
+    }
+
+
+    public void sendByteArray(byte[] data, ResponseCallback callback) {
+        byte marker = 0x06;
+        int dataSize = data.length;
+        if (dataSize > outputBuffer.capacity()) {
+            outputBuffer = expandByteBuffer(dataSize);
+        }
+        outputBuffer.put(marker);
+        outputBuffer.put(data);
+        outputBuffer.flip();
+
+        if (socketChannel.isOpen()) {
+            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
+                if (throwable != null || !result) {
+                    callback.completeExceptionally(throwable);
+                    AsyncSocket.closeSocketChannel(socketChannel);
+                } else {
+                    callback.complete(true);
+                }
+            });
+        } else {
+            AsyncSocket.closeSocketChannel(socketChannel);
+        }
+    }
+
+
+
+
+
+    private ByteBuffer expandByteBuffer(int dataSize) {
+        int newBufferSize = Math.max(outputBuffer.capacity() * 2, dataSize);
+        ByteBuffer newBuffer;
+        if (outputBuffer.isDirect()) {
+            newBuffer = ByteBuffer.allocateDirect(newBufferSize);
+        } else {
+            newBuffer = ByteBuffer.allocate(newBufferSize);
+        }
+        outputBuffer.flip();
+        newBuffer.put(outputBuffer);
+        return newBuffer;
+    }
+
+
+
+    private boolean writeOutputBuffer() {
+        try {
+            socketChannel.write(outputBuffer).get();
+            return true;
+        } catch (InterruptedException | ExecutionException e) {
+            return false;
         }
     }
 
     @Override
-    public void handle(boolean allocateDirect, Object data) {
-        Listener.getInstance().getExecutors().execute(() -> {
-            if (data == null) {
-                throw new IllegalArgumentException("Data cannot be null.");
-            }
-            if (!socketChannel.isOpen()) {
-                throw new IllegalStateException("Socket channel is closed.");
-            }
-            if (data instanceof String) {
-                sendString((String) data, allocateDirect);
-            } else if (data instanceof Integer) {
-                handleSend(() -> sendInt((Integer) data, allocateDirect));
-            } else if (data instanceof Float) {
-                handleSend(() -> sendFloat((Float) data, allocateDirect));
-            } else if (data instanceof Double) {
-                handleSend(() -> sendDouble((Double) data, allocateDirect));
-            } else if (data instanceof Character) {
-                handleSend(() -> sendChar((Character) data, allocateDirect));
-            } else {
-                throw new IllegalArgumentException("Invalid data type: " + data.getClass().getName());
-            }
-            sendOutput();
-        });
-    }
-
-    private void handleSend(SendTask sendTask) {
-        try {
-            sendTask.execute();
-        } catch (IOException e) {
-            System.err.println("Error while sending data: " + e.getMessage());
-            e.printStackTrace();
+    public void completed(Integer bytesWritten, ByteBuffer buffer) {
+        if (bytesWritten < 0) {
+            return;
+        }
+        if (buffer.hasRemaining()) {
+            socketChannel.write(buffer, buffer, this);
         }
     }
 
+    @Override
+    public void failed(Throwable exc, ByteBuffer buffer) {
+        System.err.println("Error while sending data: " + exc.getMessage());
+        exc.printStackTrace();
+        AsyncSocket.closeSocketChannel(socketChannel);
+    }
 }
