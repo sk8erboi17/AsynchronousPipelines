@@ -32,7 +32,12 @@ public class TestServer {
 
             Listener.getInstance().startConnectionListen(serverSocketChannel, socketChannel -> {
                 System.out.println("Client Connected");
-                new InputListener(socketChannel, true, createInputListenerResponseCallback(socketChannel)).start();
+                InputListener inputListener = new InputListener(socketChannel, true, createInputListenerResponseCallback(socketChannel));
+                inputListener.start();
+                Runtime.getRuntime().addShutdownHook(new Thread(() ->{
+                    System.out.println("Server shutdown");
+                    inputListener.close();
+                }));
             });
         } catch (IOException e) {
             System.err.println("Error while starting server: " + e.getMessage());
