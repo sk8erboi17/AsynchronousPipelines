@@ -3,8 +3,6 @@ package net.techtrends.general.listeners.input;
 import net.techtrends.client.AsyncSocket;
 import net.techtrends.general.listeners.ResponseCallback;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
@@ -22,18 +20,19 @@ import java.util.concurrent.Executors;
  */
 public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
     private final AsynchronousSocketChannel socketChannel;
-    private final ByteBuffer inputBuffer;
+    private ByteBuffer inputBuffer;
     private final ResponseCallback responseCallback;
-    private static final int BUFFER_SIZE = 2048;
+    private final int maxBufferSize;
     private final ExecutorService executorService = Executors.newFixedThreadPool(5);
 
-    public InputListener(AsynchronousSocketChannel socketChannel, boolean allocateDirect, ResponseCallback responseCallback) {
+    public InputListener(AsynchronousSocketChannel socketChannel, boolean allocateDirect, int initialBufferSize, int maxBufferSize, ResponseCallback responseCallback) {
         this.socketChannel = socketChannel;
         this.responseCallback = responseCallback;
+        this.maxBufferSize = maxBufferSize;
         if (allocateDirect) {
-            this.inputBuffer = ByteBuffer.allocateDirect(BUFFER_SIZE);
+            this.inputBuffer = ByteBuffer.allocateDirect(initialBufferSize);
         } else {
-            this.inputBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+            this.inputBuffer = ByteBuffer.allocate(initialBufferSize);
         }
     }
 
@@ -48,6 +47,17 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
             return;
         }
         if (bytesRead > 0) {
+            if (buffer.remaining() < maxBufferSize && buffer.capacity() < maxBufferSize) {
+                ByteBuffer newBuffer = buffer.isDirect() ? ByteBuffer.allocateDirect(Math.min(buffer.capacity() * 2, maxBufferSize)) : ByteBuffer.allocate(Math.min(buffer.capacity() * 2, maxBufferSize));
+                buffer.flip();
+                newBuffer.put(buffer);
+                inputBuffer = newBuffer;
+            } else {
+                AsyncSocket.closeSocketChannel(socketChannel);
+                System.out.println("Packet rejected: buffer size exceeds maxBufferSize!");
+                return;
+            }
+
             buffer.flip();
             byte marker = buffer.get();
             if (marker >= 0x01 && marker <= 0x06) {
@@ -65,12 +75,20 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
             }
             buffer.clear();
         }
-        socketChannel.read(buffer, buffer, this);
+        socketChannel.read(inputBuffer, inputBuffer, this);
     }
 
     private void handleString(ByteBuffer buffer, ResponseCallback callback) {
         String data = StandardCharsets.UTF_8.decode(buffer).toString();
-        CompletableFuture.runAsync(() -> callback.complete(data), executorService);
+        if (validateString(data)) {
+            CompletableFuture.runAsync(() -> callback.complete(data), executorService);
+        } else {
+            System.out.println("Invalid string data received!");
+        }
+    }
+    private boolean validateString(String data) {
+        String allowedCharactersRegex = "^[a-zA-Z0-9]+$";
+        return data.matches(allowedCharactersRegex);
     }
 
     private void handleInt(ByteBuffer buffer, ResponseCallback callback) {
@@ -103,12 +121,11 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
     public void failed(Throwable exc, ByteBuffer buffer) {
         AsyncSocket.closeSocketChannel(socketChannel);
         System.out.println("Client disconnect!");
-        // Implement additional error handling or logging here as needed
     }
 
 
     public void close() {
         AsyncSocket.closeSocketChannel(socketChannel);
-        executorService.shutdown(); // Gracefully shut down the executor service
+        executorService.shutdown();
     }
 }
