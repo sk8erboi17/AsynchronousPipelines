@@ -1,4 +1,4 @@
-package example.object;
+package example.simpleconnection.object;
 
 import java.io.Serializable;
 import java.util.UUID;

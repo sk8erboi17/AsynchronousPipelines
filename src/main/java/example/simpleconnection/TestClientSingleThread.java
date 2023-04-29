@@ -1,4 +1,4 @@
-package example;
+package example.simpleconnection;
 
 import net.techtrends.client.AsyncSocket;
 import net.techtrends.general.listeners.ResponseCallback;

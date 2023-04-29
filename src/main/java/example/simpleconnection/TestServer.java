@@ -1,6 +1,6 @@
-package example;
+package example.simpleconnection;
 
-import example.object.Human;
+import example.simpleconnection.object.Human;
 import net.techtrends.client.AsyncSocket;
 import net.techtrends.general.Listener;
 import net.techtrends.general.ObjectUtils;
