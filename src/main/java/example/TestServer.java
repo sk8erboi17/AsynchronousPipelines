@@ -1,6 +1,6 @@
 package example;
 
-import example.object.User;
+import example.object.Human;
 import net.techtrends.client.AsyncSocket;
 import net.techtrends.general.Listener;
 import net.techtrends.general.ObjectUtils;
@@ -50,7 +50,7 @@ public class TestServer {
             public void complete(Object o) {
                 try {
                     if (o instanceof byte[] object) {
-                        User user = (User) ObjectUtils.byteArrayToObject(object);
+                        Human user = (Human) ObjectUtils.byteArrayToObject(object);
                         System.out.println("User detected!");
                         System.out.println("AGE: " + user.getAge());
                         System.out.println("UUID: " + user.getUuid().toString());

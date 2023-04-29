@@ -157,10 +157,11 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
 
     public void sendByteArray(byte[] data, ResponseCallback callback) {
         byte marker = 0x06;
-        int dataSize = data.length;
+        int dataSize = data.length + 1;
         if (dataSize > outputBuffer.capacity()) {
             outputBuffer = expandByteBuffer(dataSize);
         }
+        outputBuffer.clear();
         outputBuffer.put(marker);
         outputBuffer.put(data);
         outputBuffer.flip();

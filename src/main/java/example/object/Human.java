@@ -3,12 +3,12 @@ package example.object;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class User implements Serializable {
+public class Human implements Serializable {
     private final UUID uuid;
 
     private final int age;
 
-    public User(UUID uuid, int age) {
+    public Human(UUID uuid, int age) {
         this.uuid = uuid;
         this.age = age;
     }

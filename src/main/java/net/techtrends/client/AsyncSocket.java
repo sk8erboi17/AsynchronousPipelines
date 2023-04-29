@@ -12,10 +12,22 @@ import java.util.concurrent.Future;
  */
 public class AsyncSocket {
 
-    public static AsynchronousSocketChannel createClient(InetSocketAddress inetSocketAddress) throws IOException, ExecutionException, InterruptedException {
-        AsynchronousSocketChannel socketChannel = AsynchronousSocketChannel.open();
+    public static AsynchronousSocketChannel createClient(InetSocketAddress inetSocketAddress) {
+        AsynchronousSocketChannel socketChannel = null;
+        try {
+            socketChannel = AsynchronousSocketChannel.open();
+        } catch (IOException e) {
+            throw new RuntimeException("Error while opening socket channel: " + e.getMessage(), e);
+        }
         Future<Void> connectFuture = socketChannel.connect(inetSocketAddress);
-        connectFuture.get();
+        try {
+            connectFuture.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // restore the interrupt flag of the thread
+            throw new RuntimeException("Connection interrupted while connecting to server: " + e.getMessage(), e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Error while connecting to server: " + e.getMessage(), e);
+        }
         return socketChannel;
     }
 

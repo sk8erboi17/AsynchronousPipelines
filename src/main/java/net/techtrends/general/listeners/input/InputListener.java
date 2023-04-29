@@ -1,6 +1,7 @@
 package net.techtrends.general.listeners.input;
 
 import net.techtrends.client.AsyncSocket;
+import net.techtrends.general.exception.MaxBufferSizeExceededException;
 import net.techtrends.general.listeners.ResponseCallback;
 
 import java.nio.ByteBuffer;
@@ -50,7 +51,6 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
             if (buffer.remaining() < maxBufferSize && buffer.capacity() < maxBufferSize) {
                 double bufferUsagePercentage = (double) buffer.position() / buffer.capacity();
-                System.out.println(bufferUsagePercentage);
                 if (bufferUsagePercentage >= 0.75) {
                     ByteBuffer newBuffer = buffer.isDirect() ? ByteBuffer.allocateDirect(Math.min(buffer.capacity() * 2, maxBufferSize)) : ByteBuffer.allocate(Math.min(buffer.capacity() * 2, maxBufferSize));
                     buffer.flip();
@@ -59,8 +59,11 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
                 }
             } else {
                 AsyncSocket.closeSocketChannel(socketChannel);
-                System.out.println("Packet rejected: buffer size exceeds maxBufferSize!");
-                return;
+                try {
+                    throw new MaxBufferSizeExceededException();
+                } catch (MaxBufferSizeExceededException e) {
+                    e.printStackTrace();
+                }
             }
 
 

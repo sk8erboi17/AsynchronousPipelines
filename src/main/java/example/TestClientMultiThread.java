@@ -4,10 +4,8 @@ import net.techtrends.client.AsyncSocket;
 import net.techtrends.general.listeners.ResponseCallback;
 import net.techtrends.general.listeners.output.OutputListener;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.concurrent.ExecutionException;
 
 /**
  * The TestClientMultiThread class creates a client that connects to a server at localhost:8080 using the AsyncSocket class.
@@ -40,7 +38,7 @@ public class TestClientMultiThread {
             Runnable thread2 = () -> {
                 for (int i = 0; i < 6000; i++) {
                     System.out.println(i);
-                    outputListener2.sendInt(i,createResponseCallback("Thread 2"));
+                    outputListener2.sendInt(i, createResponseCallback("Thread 2"));
                     sleep(200);
                 }
             };
@@ -48,7 +46,7 @@ public class TestClientMultiThread {
             new Thread(thread1, "Thread #1").start();
             new Thread(thread2, "Thread #2").join();
 
-        } catch (IOException | ExecutionException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
