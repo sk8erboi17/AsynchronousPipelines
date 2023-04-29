@@ -32,7 +32,7 @@ public class AsyncSocket {
     }
 
     public static void closeSocketChannel(AsynchronousSocketChannel socketChannel) {
-        if(socketChannel != null && socketChannel.isOpen()) {
+        if (socketChannel != null && socketChannel.isOpen()) {
             try {
                 socketChannel.shutdownInput();
             } catch (IOException e) {

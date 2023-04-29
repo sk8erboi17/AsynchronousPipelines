@@ -24,14 +24,14 @@ public class TestClientMultiThread {
     public static void main(String[] args) {
         try {
             AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost", 8080));
-            OutputListener outputListener1 = new OutputListener(socketChannel, 32,true);
-            OutputListener outputListener2 = new OutputListener(socketChannel, 32,true);
+            OutputListener outputListener1 = new OutputListener(socketChannel, 32, true);
+            OutputListener outputListener2 = new OutputListener(socketChannel, 32, true);
 
             Runnable thread1 = () -> {
                 for (int i = 0; i < 600; i++) {
                     System.out.println("Test n " + i);
                     sleep(100);
-                    outputListener1.sendInt(i,createResponseCallback("Thread 1"));
+                    outputListener1.sendInt(i, createResponseCallback("Thread 1"));
                 }
             };
 

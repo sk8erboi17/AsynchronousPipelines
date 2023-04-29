@@ -52,6 +52,7 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
             AsyncSocket.closeSocketChannel(socketChannel);
         }
     }
+
     public void sendString(String data, ResponseCallback callback) {
         byte marker = 0x01;
         byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
@@ -208,8 +209,6 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     }
 
 
-
-
     private ByteBuffer expandByteBuffer(int dataSize) {
         int newBufferSize = Math.max(outputBuffer.capacity() * 2, dataSize);
         ByteBuffer newBuffer;
@@ -222,7 +221,6 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         newBuffer.put(outputBuffer);
         return newBuffer;
     }
-
 
 
     private boolean writeOutputBuffer() {

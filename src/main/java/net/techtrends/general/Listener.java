@@ -23,6 +23,10 @@ public class Listener {
         });
     }
 
+    public static Listener getInstance() {
+        return instanceListener;
+    }
+
     /**
      * This method starts listening for incoming connection requests.
      *
@@ -48,11 +52,6 @@ public class Listener {
                 }
             });
         });
-    }
-
-
-    public static Listener getInstance() {
-        return instanceListener;
     }
 
 }

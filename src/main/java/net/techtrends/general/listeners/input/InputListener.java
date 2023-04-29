@@ -21,10 +21,10 @@ import java.util.concurrent.Executors;
  */
 public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
     private final AsynchronousSocketChannel socketChannel;
-    private ByteBuffer inputBuffer;
     private final ResponseCallback responseCallback;
     private final int maxBufferSize;
     private final ExecutorService executorService = Executors.newFixedThreadPool(5);
+    private ByteBuffer inputBuffer;
 
     public InputListener(AsynchronousSocketChannel socketChannel, boolean allocateDirect, int initialBufferSize, int maxBufferSize, ResponseCallback responseCallback) {
         this.socketChannel = socketChannel;

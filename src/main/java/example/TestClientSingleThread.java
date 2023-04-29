@@ -25,7 +25,7 @@ public class TestClientSingleThread {
     public static void main(String[] args) {
         try {
             AsynchronousSocketChannel socketChannel = AsyncSocket.createClient(new InetSocketAddress("localhost", 8080));
-            OutputListener listener = new OutputListener(socketChannel, 2048,true);
+            OutputListener listener = new OutputListener(socketChannel, 2048, true);
 
             for (int i = 0; i < 500; i++) {
                 String message = "Test".concat(String.valueOf(i));

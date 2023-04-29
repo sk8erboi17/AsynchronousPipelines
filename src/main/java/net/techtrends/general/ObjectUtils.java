@@ -10,6 +10,7 @@ public class ObjectUtils {
         oos.flush();
         return baos.toByteArray();
     }
+
     public static Object byteArrayToObject(byte[] bytes) throws IOException, ClassNotFoundException {
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
