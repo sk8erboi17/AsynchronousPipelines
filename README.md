@@ -20,7 +20,7 @@ private final static AsynchronousSocketChannel socketChannel = AsyncOutputSocket
  ```java  
  private final static AsynchronousSocketChannel httpChannel = AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8080));  
  ```
-**`socketChannel`**: Similar to `httpChannel`, this static variable holds an `AsynchronousSocketChannel`, but it's intended for generic socket communication rather than HTTP. This channel connects to a service listening on port `8082` on `localhost`. The specific use of port `8082` suggests that this channel is used for a different type of service or application running on the same machine, possibly for internal communication or a specific functionality that does not involve HTTP.
+**`socketChannel`**: Similar to `httpChannel`, this static variable holds an `AsynchronousSocketChannel`, but it's intended for generic socket communication rather than HTTP. This channel connects to a service listening on port `8082` on `localhost`. The specific use of port `8082` that this channel is used for a different type of service or application running on the same machine, possibly for internal communication or a specific functionality that does not involve HTTP.
 #### Receive an Input
 This setup is particularly useful for applications that require handling asynchronous communication with multiple clients, such as chat servers, multiplayer game servers, or any server that needs to efficiently manage client requests and responses.
 
@@ -38,14 +38,14 @@ private static void setupIncomeClients() {
  ```
 -   **`setupIncomeClients`**: This method is responsible for initializing the server's ability to accept and handle incoming client connections.
 
--   **`Listener.getInstance()`**: This call suggests the use of a singleton for a `Listener` class. The `Listener` class is likely responsible for network communication, specifically listening for incoming connections on a server socket.
+-   **`Listener.getInstance()`**: This call use  a singleton for a `Listener` class. The `Listener` class is likely responsible for network communication, specifically listening for incoming connections on a server socket.
 
 -   **`startConnectionListen(server, client -> {...})`**: This method starts the listening process on the specified `server` object. The server object is not explicitly defined but is assumed to be an instance that represents the server's socket or a similar networking entity. The method takes a lambda function as its second argument, which is executed for each incoming client connection. The function receives a `client` parameter, representing the connected client.
 
     -   **`client`**:  refers to an individual client connection. This object is likely an instance of `AsynchronousSocketChannel` or a similar class that facilitates asynchronous communication over network sockets.
 
     -   **`PipeslineIO.buildPipelinesIn(client)`**: For each connected client, this line constructs an input pipeline using the client connection. The input pipeline is configured to asynchronously receive and process data sent by the client. The exact configuration and processing logic would be defined within the `buildPipelinesIn` method
-    - **`setupOutputForClients(client)`**: After setting up the input pipeline, this line suggests that there is also a need to configure an output pipeline or similar mechanism for sending data back to the client. The method `setupOutputForClients` is responsible for this configuration.
+    - **`setupOutputForClients(client)`**: After setting up the input pipeline, this line is also a need to configure an output pipeline or similar mechanism for sending data back to the client. The method `setupOutputForClients` is responsible for this configuration.
 
 We will see the last two methods in another topic.
 
@@ -94,7 +94,7 @@ public class GetUsersFromWebServer implements Http {
 
 -   **`Http` Interface**: By implementing this interface, `GetUsersFromWebServer` requires a method `request()` to be defined, which returns an `HttpRequest`.
 
--   **`request()`**: This method utilizes `HttpBuilder`, a builder pattern to construct an HTTP request. The builder is configured to perform a GET operation to the URI `http://localhost:8080/api/users`. This URI suggests that the request is intended to fetch user data from a web server running locally on port `8080`.
+-   **`request()`**: This method utilizes `HttpBuilder`, a builder pattern to construct an HTTP request. The builder is configured to perform a GET operation to the URI `http://localhost:8080/api/users`. This URI is for the request is intended to fetch user data from a web server running locally on port `8080`.
 
 -   **`HttpBuilder`**: This class is designed to simplify the creation of HTTP requests. The builder pattern used here allows for fluent and readable code.
 
