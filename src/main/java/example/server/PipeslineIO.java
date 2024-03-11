@@ -15,9 +15,9 @@ public class PipeslineIO {
         PipelineOut pipelineOut = new PipelineOutBuilder()
                 .client(client)
                 .allocateDirect(true)
-                .initBuffer(2048).build();
-
-        pipelineOut.registerRequest(new SayHelloToClient("Message from server: Hi Client!"));
+                .initBuffer(2048)
+                .build();
+        pipelineOut.registerRequest(new SayHelloToClient("Message from Embedded Server: Hi Client!"));
     }
 
     public static void buildPipelinesIn(AsynchronousSocketChannel client) {

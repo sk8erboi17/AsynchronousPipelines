@@ -1,37 +1,40 @@
 package example.client;
 
 
-import example.client.request.SayHelloToServer;
+import example.client.request.GetUsersFromWebServer;
+import example.client.request.SayHelloToEmbeededServer;
 import example.client.response.ResponseManager;
 import net.techtrends.network.pipeline.Pipeline;
 import net.techtrends.network.pipeline.in.PipelineIn;
 import net.techtrends.network.pipeline.in.PipelineInBuilder;
 import net.techtrends.network.pipeline.out.PipelineOut;
 import net.techtrends.network.pipeline.out.PipelineOutBuilder;
+import net.techtrends.network.pipeline.out.content.http.HttpBuilder;
 
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.Arrays;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
 
 
 public class PipeslineIO {
-    public static void buildPipelinesOut(AsynchronousSocketChannel client) {
 
-        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).initBuffer(4096).build();
-
-        scheduledExecutorService.scheduleWithFixedDelay(() -> {
-            pipelineOut.registerRequest(new SayHelloToServer("Message from client: Hi server!"));
-        }, 500, 500, TimeUnit.MILLISECONDS);
-
+    //HTTP REQUEST HERE
+    public static void buildPipelinesHttpOut(AsynchronousSocketChannel client) {
+        PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).setHttpEnabled(true).initBuffer(4096).build();
+        pipelineOut.registerRequest(new GetUsersFromWebServer().request());
         closePipeline(pipelineOut);
     }
 
+    ///EMBEEDSERVER REQUEST HERE
+    public static void buildPipelinesSocketOut(AsynchronousSocketChannel client) {
+        PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).initBuffer(4096).setHttpEnabled(false).build();
+        pipelineOut.registerRequest(new SayHelloToEmbeededServer("Message from Client: Hi Embedded Server!"));
+        closePipeline(pipelineOut);
+    }
+
+
     public static void buildPipelinesIn(AsynchronousSocketChannel client) {
         PipelineIn pipelineIn = new PipelineInBuilder()
-                .configureAggregateCallback(Arrays.asList(ResponseManager.responseToServer, ResponseManager.secondResponse))
+                .configureAggregateCallback(Collections.singletonList(ResponseManager.responseToServer))
                 .client(client)
                 .build();
         closePipeline(pipelineIn);

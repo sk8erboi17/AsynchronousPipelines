@@ -14,7 +14,7 @@ public class PipelineServer {
 
     public static void main(String[] args) {
         try {
-            server = AsyncInputSocket.createInput(new InetSocketAddress(8080));
+            server = AsyncInputSocket.createInput(new InetSocketAddress(8082));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

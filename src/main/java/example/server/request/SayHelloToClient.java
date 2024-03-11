@@ -1,7 +1,7 @@
 package example.server.request;
 
 import net.techtrends.listeners.response.CallbackBuilder;
-import net.techtrends.network.pipeline.out.Request;
+import net.techtrends.network.pipeline.out.content.Request;
 
 public class SayHelloToClient extends Request {
     public SayHelloToClient(String message) {

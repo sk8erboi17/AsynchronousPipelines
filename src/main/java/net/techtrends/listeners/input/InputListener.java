@@ -3,13 +3,19 @@ package net.techtrends.listeners.input;
 import net.techtrends.exception.MaxBufferSizeExceededException;
 import net.techtrends.listeners.output.AsyncOutputSocket;
 import net.techtrends.listeners.response.Callback;
+import net.techtrends.network.pipeline.out.content.http.HttpFormatter;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
+    private ExecutorService readThread = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() / 2);
     private static AsynchronousSocketChannel socketChannel;
     private final int maxBufferSize;
     private final Callback callback;
@@ -60,7 +66,7 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
             buffer.flip();
             byte marker = buffer.get();
-            if (marker >= 0x01 && marker <= 0x07) {
+            if (marker >= 0x01 && marker <= 0x06) {
 
                 switch (marker) {
                     case 0x01 -> handleString(buffer, callback);
@@ -69,16 +75,16 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
                     case 0x04 -> handleDouble(buffer, callback);
                     case 0x05 -> handleChar(buffer, callback);
                     case 0x06 -> handleByteArray(buffer, callback);
-                    case 0x07 -> handleStringSanitized(buffer, callback);
                 }
             } else {
-                AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-                System.out.println("Invalid marker received!");
+                handleHTTP(buffer, callback);
             }
             buffer.clear();
             inputBuffer.clear();
         }
-        socketChannel.read(inputBuffer, inputBuffer, this);
+        readThread.execute(() -> {
+            socketChannel.read(inputBuffer, inputBuffer, this);
+        });
     }
 
     private void handleString(ByteBuffer buffer, Callback callback) {
@@ -87,15 +93,10 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
     }
 
-    private void handleStringSanitized(ByteBuffer buffer, Callback callback) {
+    private void handleHTTP(ByteBuffer buffer, Callback callback) {
         String data = StandardCharsets.UTF_8.decode(buffer).toString();
-        String sanitizedData = sanitizeString(data);
-        callback.complete(sanitizedData);
-    }
-
-    private String sanitizeString(String data) {
-        String allowedCharactersRegex = "[^A-Za-z0-9]+";
-        return data.replaceAll(allowedCharactersRegex, "");
+        HttpFormatter.formatHttpResponse(data);
+        callback.complete(data);
     }
 
     private void handleInt(ByteBuffer buffer, Callback callback) {
