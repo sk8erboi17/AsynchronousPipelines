@@ -12,8 +12,12 @@ import java.util.Collections;
 
 public class PipeslineIO {
     public static void buildPipelinesOut(AsynchronousSocketChannel client) {
-        PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).initBuffer(2048).build();
-        pipelineOut.registerRequest(new SayHelloToClient());
+        PipelineOut pipelineOut = new PipelineOutBuilder()
+                .client(client)
+                .allocateDirect(true)
+                .initBuffer(2048).build();
+
+        pipelineOut.registerRequest(new SayHelloToClient("Message from server: Hi Client!"));
     }
 
     public static void buildPipelinesIn(AsynchronousSocketChannel client) {

@@ -23,7 +23,7 @@ public class PipeslineIO {
         PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).initBuffer(4096).build();
 
         scheduledExecutorService.scheduleWithFixedDelay(() -> {
-            pipelineOut.registerRequest(new SayHelloToServer());
+            pipelineOut.registerRequest(new SayHelloToServer("Message from client: Hi server!"));
         }, 500, 500, TimeUnit.MILLISECONDS);
 
         closePipeline(pipelineOut);

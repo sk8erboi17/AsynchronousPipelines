@@ -18,17 +18,17 @@ public class PipelineServer {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        setupInput();
+        setupIncomeClients();
     }
 
-    private static void setupInput() {
+    private static void setupIncomeClients() {
         Listener.getInstance().startConnectionListen(server, client -> {
             PipeslineIO.buildPipelinesIn(client);
-            setupOutput(client);
+            setupOutputForClients(client);
         });
     }
 
-    private static void setupOutput(AsynchronousSocketChannel client) {
+    private static void setupOutputForClients(AsynchronousSocketChannel client) {
         PipeslineIO.buildPipelinesOut(client);
     }
 
