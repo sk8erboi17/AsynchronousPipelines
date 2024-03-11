@@ -7,8 +7,8 @@ public class SayHelloToServer extends Request {
     public SayHelloToServer() {
         super(new CallbackBuilder()
                         .onComplete(null)
-                        .onException(Throwable::printStackTrace).build()
-                , "Message from client: Hi server!");
+                        .onException(Throwable::printStackTrace).build(),
+                "Message from client: Hi server!");
     }
 
 

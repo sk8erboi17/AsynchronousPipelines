@@ -19,7 +19,7 @@ public class PipelineClient {
     }
 
     private static void setupOutput() {
-        PipeslineIO.buildPipelinesOut(new PipelineOut(socketChannel, true, 11024));
+        PipeslineIO.buildPipelinesOut(socketChannel);
     }
 
     private static void setupInput() {
