@@ -4,18 +4,19 @@
     <groupId>org.example</groupId>
     <artifactId>AsynchronousServerClientLib</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <name>Archetype - AsynchronousServerClientLib</name>
+    <url>http://maven.apache.org</url>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>20</source>
-                    <target>20</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    <name>Archetype - AsynchronousServerClientLib</name>
-    <url>http://maven.apache.org</url>
 </project>
