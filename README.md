@@ -59,7 +59,8 @@ This method sets up an input pipeline for asynchronous communication with extern
 public static void buildPipelinesIn(AsynchronousSocketChannel client) {    
     PipelineIn pipelineIn = new PipelineInBuilder()    
             .configureAggregateCallback(  
- new CallbackBuilder().onComplete(object -> System.out.println("Response:" + object ))    
+             new CallbackBuilder()
+                .onComplete(object -> System.out.println("Response:" + object ))    
                 .onException(Throwable::printStackTrace)    
                 .build())    
             .client(client)    
