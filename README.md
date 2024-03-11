@@ -20,7 +20,7 @@ private final static AsynchronousSocketChannel socketChannel = AsyncOutputSocket
  ```java  
  private final static AsynchronousSocketChannel httpChannel = AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8080));  
  ```
-**`socketChannel`**: Similar to `httpChannel`, this static variable holds an `AsynchronousSocketChannel`, but it's intended for generic socket communication rather than HTTP. This channel connects to a service listening on port `8082` on `localhost`. The specific use of port `8082` suggests that this channel might be used for a different type of service or application running on the same machine, possibly for internal communication or a specific functionality that does not involve HTTP.
+**`socketChannel`**: Similar to `httpChannel`, this static variable holds an `AsynchronousSocketChannel`, but it's intended for generic socket communication rather than HTTP. This channel connects to a service listening on port `8082` on `localhost`. The specific use of port `8082` suggests that this channel is used for a different type of service or application running on the same machine, possibly for internal communication or a specific functionality that does not involve HTTP.
 #### Receive an Input
 This setup is particularly useful for applications that require handling asynchronous communication with multiple clients, such as chat servers, multiplayer game servers, or any server that needs to efficiently manage client requests and responses.
 
