@@ -31,7 +31,10 @@ The provided code snippet demonstrates how to initialize an `AsynchronousServerS
 **`AsyncInputSocket.createInput(...)`**: This method abstracts the creation and initialization of an `AsynchronousServerSocketChannel` and the  purpose is to simplify the setup process of the server socket channel.
  ```java  
 private static void setupIncomeClients() {  
- Listener.getInstance().startConnectionListen(server, client -> { PipeslineIO.buildPipelinesIn(client); setupOutputForClients(client); });}  
+ Listener.getInstance().startConnectionListen(server, client -> {
+     PipeslineIO.buildPipelinesIn(client); setupOutputForClients(client);
+    });
+}  
  ```
 -   **`setupIncomeClients`**: This method is responsible for initializing the server's ability to accept and handle incoming client connections.
 
@@ -82,7 +85,11 @@ The `GetUsersFromWebServer` and `SayHelloToEmbeededServer` classes demonstrate t
 ### HTTP Request: `GetUsersFromWebServer`
 ```java  
 public class GetUsersFromWebServer implements Http {  
- @Override public HttpRequest request() { return new HttpBuilder().GET().uri("http://localhost:8080/api/users").build(); }}  
+ @Override 
+ public HttpRequest request() { 
+     return new HttpBuilder().GET().uri("http://localhost:8080/api/users").build();
+ }
+}  
 ```  
 
 -   **`Http` Interface**: By implementing this interface, `GetUsersFromWebServer` requires a method `request()` to be defined, which returns an `HttpRequest`.
@@ -95,7 +102,12 @@ public class GetUsersFromWebServer implements Http {
 ```java  
   
 public class SayHelloToEmbeededServer extends Request {  
- public SayHelloToEmbeededServer(String message) { super(new CallbackBuilder() .onComplete(null) .onException(Throwable::printStackTrace).build(), message); }}  
+ public SayHelloToEmbeededServer(String message) {
+     super(new CallbackBuilder()
+             .onComplete(null)
+             .onException(Throwable::printStackTrace).build(), message); 
+ }
+}  
 ```  
 
 -   **Constructor**: The constructor takes a `String message` as an argument, which is the payload or message to be sent to the embedded server.
