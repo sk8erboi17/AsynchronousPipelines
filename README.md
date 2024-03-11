@@ -7,7 +7,7 @@ The **pipeline** serves to organize and manage asynchronous data flows in networ
 This approach allows for the efficient processing of data streams and asynchronous operations, ensuring that applications can scale and adapt to various networking tasks with ease. By encapsulating the complexities of asynchronous communication into a structured pipeline, developers can focus on the core logic of their applications while leveraging a robust mechanism for data transmission and processing.
 
 ## Let's build our first Pipeline
-### Setup out first output/input socket
+### Setup our first output/input socket
 #### Send an Output
 These channels are intended for different purposes, as indicated by their names: one for HTTP communication and the other for generic socket communication. Let's break down the code for a clearer understanding:
 
