@@ -14,8 +14,7 @@ These channels are intended for different purposes, as indicated by their names:
 **`AsyncOutputSocket.createOutput(...)`**: This method creates and opens an `AsynchronousSocketChannel`. It connects the channel to a specified remote address, in this case, `localhost` with specific ports. The exact implementation details of `createOutput` would depend on the library or framework being used.
 
  ```java  
-private final static AsynchronousSocketChannel socketChannel =   
-    AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8082));  
+private final static AsynchronousSocketChannel socketChannel = AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8082));  
  ```
 **`httpChannel`**: This variable holds an `AsynchronousSocketChannel` intended for HTTP communication. This channel is connected to a server running on `localhost` (the same machine as the client) and listening on port `8080`. This is a common setup for local development and testing of web applications, where the application server listens for HTTP requests on port `8080`.
  ```java  
