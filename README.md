@@ -32,7 +32,8 @@ The provided code snippet demonstrates how to initialize an `AsynchronousServerS
  ```java  
 private static void setupIncomeClients() {  
  Listener.getInstance().startConnectionListen(server, client -> {
-     PipeslineIO.buildPipelinesIn(client); setupOutputForClients(client);
+     PipeslineIO.buildPipelinesIn(client);
+     setupOutputForClients(client);
     });
 }  
  ```
