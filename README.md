@@ -37,7 +37,7 @@ private static void setupIncomeClients() {
 
 -   **`Listener.getInstance()`**: This call suggests the use of a singleton for a `Listener` class. The `Listener` class is likely responsible for network communication, specifically listening for incoming connections on a server socket.
 
--   **`startConnectionListen(server, client -> {...})`**: This method starts the listening process on the specified `server` object. The server object is not explicitly defined in the snippet but is assumed to be an instance that represents the server's socket or a similar networking entity. The method takes a lambda function as its second argument, which is executed for each incoming client connection. The lambda function receives a `client` parameter, representing the connected client.
+-   **`startConnectionListen(server, client -> {...})`**: This method starts the listening process on the specified `server` object. The server object is not explicitly defined but is assumed to be an instance that represents the server's socket or a similar networking entity. The method takes a lambda function as its second argument, which is executed for each incoming client connection. The function receives a `client` parameter, representing the connected client.
 
     -   **`client`**:  refers to an individual client connection. This object is likely an instance of `AsynchronousSocketChannel` or a similar class that facilitates asynchronous communication over network sockets.
 
