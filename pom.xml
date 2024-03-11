@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.techtrends</groupId>
     <artifactId>AsynchronousPipelines</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>Archetype - AsynchronousPipelines</name>
     <url>http://maven.apache.org</url>
