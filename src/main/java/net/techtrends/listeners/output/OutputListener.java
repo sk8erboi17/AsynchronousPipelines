@@ -29,19 +29,7 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         outputBuffer.put(marker);
         outputBuffer.putInt(data);
         outputBuffer.flip();
-
-        if (socketChannel.isOpen()) {
-            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
-                if (throwable != null || !result) {
-                    callback.completeExceptionally(throwable);
-                    AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-                } else {
-                    callback.complete(true);
-                }
-            });
-        } else {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-        }
+        performAsyncSocketOperation(callback);
     }
 
     public void sendString(String data, Callback callback) {
@@ -57,18 +45,7 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         outputBuffer.put((byte) 0);
         outputBuffer.flip();
 
-        if (socketChannel.isOpen()) {
-            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
-                if (throwable != null || !result) {
-                    callback.completeExceptionally(throwable);
-                    AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-                } else {
-                    callback.complete(true);
-                }
-            });
-        } else {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-        }
+        performAsyncSocketOperation(callback);
     }
 
     public void sendFloat(float data, Callback callback) {
@@ -82,18 +59,7 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         outputBuffer.putFloat(data);
         outputBuffer.flip();
 
-        if (socketChannel.isOpen()) {
-            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
-                if (throwable != null || !result) {
-                    callback.completeExceptionally(throwable);
-                    AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-                } else {
-                    callback.complete(true);
-                }
-            });
-        } else {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-        }
+        performAsyncSocketOperation(callback);
     }
 
     public void sendDouble(double data, Callback callback) {
@@ -107,18 +73,7 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         outputBuffer.putDouble(data);
         outputBuffer.flip();
 
-        if (socketChannel.isOpen()) {
-            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
-                if (throwable != null || !result) {
-                    callback.completeExceptionally(throwable);
-                    AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-                } else {
-                    callback.complete(true);
-                }
-            });
-        } else {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-        }
+        performAsyncSocketOperation(callback);
     }
 
     public void sendChar(char data, Callback callback) {
@@ -131,18 +86,7 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         outputBuffer.put(marker);
         outputBuffer.putChar(data);
         outputBuffer.flip();
-        if (socketChannel.isOpen()) {
-            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
-                if (throwable != null || !result) {
-                    callback.completeExceptionally(throwable);
-                    AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-                } else {
-                    callback.complete(true);
-                }
-            });
-        } else {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-        }
+        performAsyncSocketOperation(callback);
     }
 
     public void sendByteArray(byte[] data, Callback callback) {
@@ -156,45 +100,29 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         outputBuffer.put(data);
         outputBuffer.flip();
 
-        if (socketChannel.isOpen()) {
-            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
-                if (throwable != null || !result) {
-                    callback.completeExceptionally(throwable);
-                    AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-                } else {
-                    callback.complete(true);
-                }
-            });
-        } else {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
+        performAsyncSocketOperation(callback);
+    }
+
+
+    @Override
+    public void completed(Integer bytesWritten, ByteBuffer buffer) {
+        if (bytesWritten < 0) {
+            return;
+        }
+        if (buffer.hasRemaining()) {
+            socketChannel.write(buffer, buffer, this);
         }
     }
 
-    public void sendStringSanitized(String data, Callback callback) {
-        byte marker = 0x07;
-        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
-        int dataSize = bytes.length + 1;
-        if (dataSize > outputBuffer.capacity()) {
-            outputBuffer = expandByteBuffer(dataSize);
-        }
-        outputBuffer.clear();
-        outputBuffer.put(marker);
-        outputBuffer.put(bytes);
-        outputBuffer.put((byte) 0);
-        outputBuffer.flip();
+    @Override
+    public void failed(Throwable exc, ByteBuffer buffer) {
+        System.err.println("Error while sending data: " + exc.getMessage());
+        exc.printStackTrace();
+        AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
+    }
 
-        if (socketChannel.isOpen()) {
-            CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
-                if (throwable != null || !result) {
-                    callback.completeExceptionally(throwable);
-                    AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-                } else {
-                    callback.complete(true);
-                }
-            });
-        } else {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-        }
+    public void close() {
+        AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
     }
 
     private ByteBuffer expandByteBuffer(int dataSize) {
@@ -219,24 +147,20 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         }
     }
 
-    @Override
-    public void completed(Integer bytesWritten, ByteBuffer buffer) {
-        if (bytesWritten < 0) {
+    public void performAsyncSocketOperation(Callback callback) {
+        if (socketChannel == null && !socketChannel.isOpen()) {
+            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
             return;
         }
-        if (buffer.hasRemaining()) {
-            socketChannel.write(buffer, buffer, this);
-        }
-    }
 
-    @Override
-    public void failed(Throwable exc, ByteBuffer buffer) {
-        System.err.println("Error while sending data: " + exc.getMessage());
-        exc.printStackTrace();
-        AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-    }
+        CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
+            if (throwable == null || result) {
+                callback.complete(true);
+            }
 
-    public void close() {
-        AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
+            callback.completeExceptionally(throwable != null ? throwable : new RuntimeException("Failed to write to socket"));
+            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
+        });
     }
 }
+

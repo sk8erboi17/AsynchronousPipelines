@@ -4,13 +4,5 @@
     <excludeFromCompile>
       <directory url="file://$PROJECT_DIR$/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
-    <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="AsynchronousServerClientLib" />
-      </profile>
-    </annotationProcessing>
   </component>
 </project>

@@ -9,7 +9,6 @@ import net.techtrends.network.pipeline.in.PipelineIn;
 import net.techtrends.network.pipeline.in.PipelineInBuilder;
 import net.techtrends.network.pipeline.out.PipelineOut;
 import net.techtrends.network.pipeline.out.PipelineOutBuilder;
-import net.techtrends.network.pipeline.out.content.http.HttpBuilder;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Collections;
@@ -47,4 +46,5 @@ public class PipeslineIO {
             pipeline.closePipeline();
         }));
     }
+
 }
