@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66d8af5b-6642-4cbe-9837-0f8b3fd595fe" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/AsyncOutputSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/AsyncOutputSocket.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +185,7 @@
       <workItem from="1710146216669" duration="21578000" />
       <workItem from="1710255239512" duration="876000" />
       <workItem from="1710265957308" duration="140000" />
-      <workItem from="1710266121302" duration="11901000" />
+      <workItem from="1710266121302" duration="11988000" />
     </task>
     <servers />
   </component>
