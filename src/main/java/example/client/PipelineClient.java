@@ -10,8 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PipelineClient {
     private final static ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-
-     private final static AsynchronousSocketChannel httpChannel = AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8080));
+    private final static AsynchronousSocketChannel httpChannel = AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8080));
     private final static AsynchronousSocketChannel socketChannel = AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8082));
 
 
@@ -28,7 +27,6 @@ public class PipelineClient {
     private static void setupInput() {
         PipeslineIO.buildPipelinesIn(socketChannel);
         PipeslineIO.buildPipelinesIn(httpChannel);
-
     }
 
 }

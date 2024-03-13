@@ -38,7 +38,7 @@ public class PipeslineIO {
             }
         });
 
-        // closePipeline(pipelineOut);
+        closePipeline(pipelineOut);
     }
 
 
