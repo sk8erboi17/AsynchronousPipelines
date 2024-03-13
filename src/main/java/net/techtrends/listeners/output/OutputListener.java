@@ -86,6 +86,7 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         outputBuffer.put(marker);
         outputBuffer.putChar(data);
         outputBuffer.flip();
+        
         performAsyncSocketOperation(callback);
     }
 
