@@ -14,7 +14,9 @@ import java.util.concurrent.Executors;
 
 public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
     private final ExecutorService readThread = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() / 2);
+
     private final AsynchronousSocketChannel socketChannel;
+
     private final int bufferSize;
 
     private final Callback callback;
