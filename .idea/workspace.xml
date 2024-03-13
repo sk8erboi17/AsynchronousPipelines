@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="66d8af5b-6642-4cbe-9837-0f8b3fd595fe" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2b4b8VWzUSM5d7CRRXbD3uumd9Y" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.PipelineClient.executor": "Run",
+    "Application.PipelineServer.executor": "Run",
+    "Application.ProtocolServer.executor": "Run",
+    "Application.Server.executor": "Run",
+    "Application.ServerApplication.executor": "Run",
+    "Application.TestClientMultiThread.executor": "Run",
+    "Application.TestClientSingleThread.executor": "Run",
+    "Application.example.client.PipelineClient.executor": "Run",
+    "Application.example.server.PipelineServer.executor": "Run",
+    "Attach to process.pid 66056.executor": "ProcessAttachDebug",
+    "Maven.AsynchronousPipelines [clean,validate...].executor": "Run",
+    "Maven.AsynchronousPipelines [clean].executor": "Run",
+    "Maven.AsynchronousServerClientLib [clean...].executor": "Run",
+    "Maven.AsynchronousServerClientLib [clean].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Giuseppe/Desktop/Github/AsynchronousPipeline",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="net.techtrends" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Giuseppe\Desktop\AsynchronousServerClientLib\src\main\java\example" />
+      <recent name="C:\Users\Giuseppe\Desktop\AsynchronousServerClientLib\src\main\java\net\techtrends\network\in\request" />
+      <recent name="C:\Users\Giuseppe\Desktop\AsynchronousServerClientLib\src\main\java\net\techtrends\network\in" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="example.client.request" />
+      <recent name="net.techtrends.network.pipeline.out.content.http" />
+      <recent name="net.techtrends.network.pipeline.out" />
+      <recent name="net.techtrends.network.pipeline.in" />
+      <recent name="net.techtrends.network.out.response" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.example.client.PipelineClient">
+    <configuration name="PipelineClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="example.protocol.PipelineClient" />
+      <module name="AsynchronousServerClientLib" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="example.protocol.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PipelineServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="example.protocol.PipelineServer" />
+      <module name="AsynchronousServerClientLib" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="example.protocol.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ServerApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="example.protocol.ServerApplication" />
+      <module name="AsynchronousServerClientLib" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="example.protocol.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="example.client.PipelineClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="example.client.PipelineClient" />
+      <module name="AsynchronousPipelines" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="example.client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="example.server.PipelineServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="example.server.PipelineServer" />
+      <module name="AsynchronousPipelines" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="example.server.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.example.client.PipelineClient" />
+        <item itemvalue="Application.example.server.PipelineServer" />
+        <item itemvalue="Application.ServerApplication" />
+        <item itemvalue="Application.PipelineClient" />
+        <item itemvalue="Application.PipelineServer" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="66d8af5b-6642-4cbe-9837-0f8b3fd595fe" name="Changes" comment="" />
+      <created>1705477138387</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1705477138387</updated>
+      <workItem from="1705477139385" duration="2781000" />
+      <workItem from="1705502825673" duration="597000" />
+      <workItem from="1710087827297" duration="31910000" />
+      <workItem from="1710123444590" duration="219000" />
+      <workItem from="1710146216669" duration="21578000" />
+      <workItem from="1710255239512" duration="876000" />
+      <workItem from="1710265957308" duration="140000" />
+      <workItem from="1710266121302" duration="11854000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
