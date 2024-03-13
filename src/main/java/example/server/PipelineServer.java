@@ -7,7 +7,6 @@ import net.techtrends.listeners.input.AsyncInputSocket;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousServerSocketChannel;
-import java.nio.channels.AsynchronousSocketChannel;
 
 public class PipelineServer {
     private static AsynchronousServerSocketChannel server;
@@ -22,15 +21,7 @@ public class PipelineServer {
     }
 
     private static void setupIncomeClients() {
-        Listener.getInstance().startConnectionListen(server, client -> {
-            PipeslineIO.buildPipelinesIn(client);
-            setupOutputForClients(client);
-        });
+        Listener.getInstance().startConnectionListen(server, PipeslineIO::buildPipelinesIn);
     }
-
-    private static void setupOutputForClients(AsynchronousSocketChannel client) {
-        PipeslineIO.buildPipelinesOut(client);
-    }
-
 
 }

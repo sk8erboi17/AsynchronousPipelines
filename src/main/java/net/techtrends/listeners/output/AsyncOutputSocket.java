@@ -1,28 +1,23 @@
 package net.techtrends.listeners.output;
 
+import net.techtrends.listeners.group.PipelineNetworkManager;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class AsyncOutputSocket {
 
     public static AsynchronousSocketChannel createOutput(InetSocketAddress inetSocketAddress) {
+        PipelineNetworkManager pipelineNetworkManager = new PipelineNetworkManager(Runtime.getRuntime().availableProcessors() / 2);
         AsynchronousSocketChannel socketChannel;
         try {
-            socketChannel = AsynchronousSocketChannel.open();
+            socketChannel = pipelineNetworkManager.createChannel(inetSocketAddress);
         } catch (IOException e) {
             throw new RuntimeException("Error while opening socket channel: " + e.getMessage(), e);
-        }
-        Future<Void> connectFuture = socketChannel.connect(inetSocketAddress);
-        try {
-            connectFuture.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Connection interrupted while connecting to server: " + e.getMessage(), e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException("Error while connecting to server: " + e.getMessage(), e);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
         return socketChannel;
     }

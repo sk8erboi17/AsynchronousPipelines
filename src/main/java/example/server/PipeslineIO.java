@@ -9,20 +9,24 @@ import net.techtrends.network.pipeline.out.PipelineOutBuilder;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Collections;
+import java.util.concurrent.Executors;
 
 public class PipeslineIO {
-    public static void buildPipelinesOut(AsynchronousSocketChannel client) {
-        PipelineOut pipelineOut = new PipelineOutBuilder()
+    public static PipelineOut buildPipelinesOut(AsynchronousSocketChannel client) {
+        return new PipelineOutBuilder()
                 .client(client)
                 .allocateDirect(true)
                 .initBuffer(2048)
                 .build();
-        pipelineOut.registerRequest(new SayHelloToClient("Message from Embedded Server: Hi Client!"));
     }
 
     public static void buildPipelinesIn(AsynchronousSocketChannel client) {
+        PipelineOut pipelineOut = buildPipelinesOut(client);
         Callback responseCallback = new CallbackBuilder()
-                .onComplete(System.out::println)
+                .onComplete(o -> Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                    System.out.println(o);
+                    pipelineOut.registerRequest(new SayHelloToClient("Message from Embedded Server: Hi Client!"));
+                }))
                 .onException(Throwable::printStackTrace)
                 .build();
 

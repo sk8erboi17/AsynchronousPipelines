@@ -31,6 +31,6 @@ public class PipelineOutBuilder {
     }
 
     public PipelineOut build() {
-        return new PipelineOut(client, allocateDirect, initBuffer,isHttpEnabled);
+        return new PipelineOut(client, allocateDirect, initBuffer, isHttpEnabled);
     }
 }

@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class HttpBuilder {
 
+    private final Map<String, String> headers = new HashMap<>();
     private URI uri;
     private String method = "GET"; // Default method
-    private final Map<String, String> headers = new HashMap<>();
     private String body;
     private Duration timeout;
 

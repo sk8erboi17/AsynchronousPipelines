@@ -12,6 +12,7 @@ import net.techtrends.network.pipeline.out.PipelineOutBuilder;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Collections;
+import java.util.concurrent.Executors;
 
 
 public class PipeslineIO {
@@ -26,8 +27,18 @@ public class PipeslineIO {
     ///EMBEEDSERVER REQUEST HERE
     public static void buildPipelinesSocketOut(AsynchronousSocketChannel client) {
         PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).initBuffer(4096).setHttpEnabled(false).build();
-        pipelineOut.registerRequest(new SayHelloToEmbeededServer("Message from Client: Hi Embedded Server!"));
-        closePipeline(pipelineOut);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            while (true) {
+                pipelineOut.registerRequest(new SayHelloToEmbeededServer("Message from Client: Hi Embedded Server!"));
+                try {
+                    Thread.sleep(105);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        // closePipeline(pipelineOut);
     }
 
 

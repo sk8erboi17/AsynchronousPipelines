@@ -74,10 +74,11 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
     }
 
 
-    private void send(ByteBuffer buffer){
+    private void send(ByteBuffer buffer) {
         ListenData processData = new ListenData();
-        processData.listen(buffer,callback);
+        processData.listen(buffer, callback);
     }
+
     @Override
     public void failed(Throwable exc, ByteBuffer buffer) {
         AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
