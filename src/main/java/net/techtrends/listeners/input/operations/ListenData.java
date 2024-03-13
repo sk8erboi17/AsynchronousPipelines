@@ -10,7 +10,6 @@ public class ListenData {
 
     public void listen(ByteBuffer buffer, Callback callback) {
         if (buffer.remaining() <= 0) {
-            System.out.println("a");
             return;
         }
         byte marker = buffer.get();
