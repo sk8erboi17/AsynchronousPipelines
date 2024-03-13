@@ -6,7 +6,7 @@ public class PipelineOutBuilder {
 
     private AsynchronousSocketChannel client;
     private boolean allocateDirect = false;
-    private int initBuffer = 1024;
+    private int bufferSize = 1024;
     private boolean isHttpEnabled = false;
 
     public PipelineOutBuilder client(AsynchronousSocketChannel client) {
@@ -25,12 +25,12 @@ public class PipelineOutBuilder {
         return this;
     }
 
-    public PipelineOutBuilder initBuffer(int initBuffer) {
-        this.initBuffer = initBuffer;
+    public PipelineOutBuilder setBufferSize(int bufferSize) {
+        this.bufferSize = bufferSize;
         return this;
     }
 
     public PipelineOut build() {
-        return new PipelineOut(client, allocateDirect, initBuffer, isHttpEnabled);
+        return new PipelineOut(client, allocateDirect, bufferSize, isHttpEnabled);
     }
 }

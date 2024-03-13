@@ -11,9 +11,9 @@ import java.nio.channels.AsynchronousSocketChannel;
 public class PipelineIn implements Pipeline {
     private static InputListener inputListener = null;
 
-    public PipelineIn(AsynchronousSocketChannel client, boolean allocateDirect, int initBuffer, int maxBuffer, Callback callback) {
-        inputListener = new InputListener(client, allocateDirect, initBuffer, maxBuffer, callback);
-        inputListener.startRead(new BufferBuilder().setInitSize(initBuffer).allocateDirect(allocateDirect).build());
+    public PipelineIn(AsynchronousSocketChannel client, boolean allocateDirect, int bufferSize, Callback callback) {
+        inputListener = new InputListener(client,  bufferSize, callback);
+        inputListener.startRead(new BufferBuilder().setInitSize(bufferSize).allocateDirect(allocateDirect).build());
     }
 
     @Override

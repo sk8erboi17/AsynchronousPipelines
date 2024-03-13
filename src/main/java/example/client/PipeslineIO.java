@@ -19,14 +19,14 @@ public class PipeslineIO {
 
     //HTTP REQUEST HERE
     public static void buildPipelinesHttpOut(AsynchronousSocketChannel client) {
-        PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).setHttpEnabled(true).initBuffer(4096).build();
+        PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).setHttpEnabled(true).setBufferSize(4096).build();
         pipelineOut.registerRequest(new GetUsersFromWebServer().request());
         closePipeline(pipelineOut);
     }
 
     ///EMBEEDSERVER REQUEST HERE
     public static void buildPipelinesSocketOut(AsynchronousSocketChannel client) {
-        PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).initBuffer(4096).setHttpEnabled(false).build();
+        PipelineOut pipelineOut = new PipelineOutBuilder().client(client).allocateDirect(true).setBufferSize(4096).setHttpEnabled(false).build();
         Executors.newSingleThreadExecutor().execute(() -> {
             while (true) {
                 pipelineOut.registerRequest(new SayHelloToEmbeededServer("Message from Client: Hi Embedded Server!"));

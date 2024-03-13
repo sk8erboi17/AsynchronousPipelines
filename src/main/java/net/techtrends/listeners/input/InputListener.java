@@ -15,18 +15,14 @@ import java.util.concurrent.Executors;
 public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
     private final ExecutorService readThread = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() / 2);
     private final AsynchronousSocketChannel socketChannel;
-    private final int maxBufferSize;
-    private final boolean allocateDirect;
-    private final int initialBufferSize;
+    private final int bufferSize;
 
     private final Callback callback;
 
-    public InputListener(AsynchronousSocketChannel socketChannel, boolean allocateDirect, int initialBufferSize, int maxBufferSize, Callback callback) {
+    public InputListener(AsynchronousSocketChannel socketChannel, int bufferSize, Callback callback) {
         this.socketChannel = socketChannel;
         this.callback = callback;
-        this.maxBufferSize = maxBufferSize;
-        this.allocateDirect = allocateDirect;
-        this.initialBufferSize = initialBufferSize;
+        this.bufferSize = bufferSize;
     }
 
     @Override
@@ -36,7 +32,7 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
             return;
         }
         if (bytesRead > 0) {
-            if (buffer.remaining() > maxBufferSize && buffer.capacity() > maxBufferSize) {
+            if (buffer.capacity() > bufferSize) {
                 AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
                 try {
                     throw new MaxBufferSizeExceededException();

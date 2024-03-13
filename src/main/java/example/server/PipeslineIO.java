@@ -16,7 +16,7 @@ public class PipeslineIO {
         return new PipelineOutBuilder()
                 .client(client)
                 .allocateDirect(true)
-                .initBuffer(2048)
+                .setBufferSize(2048)
                 .build();
     }
 
@@ -32,8 +32,7 @@ public class PipeslineIO {
                 .build();
 
         new PipelineInBuilder()
-                .setInitSize(4096*2)
-                .setMaxSize(4096*4)
+                .setBufferSize(4096*2)
                 .configureAggregateCallback(Collections.singletonList(responseCallback))
                 .client(client)
                 .build();

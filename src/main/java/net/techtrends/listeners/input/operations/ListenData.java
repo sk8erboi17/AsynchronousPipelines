@@ -13,6 +13,7 @@ public class ListenData {
             return;
         }
         byte marker = buffer.get();
+        System.out.println(marker);
         if (marker >= 0x01 && marker <= 0x06) {
 
             switch (marker) {
@@ -24,7 +25,7 @@ public class ListenData {
                 case 0x06 -> handleByteArray(buffer, callback);
             }
         } else {
-            handleHTTP(buffer, callback);
+            handleHTTP(buffer,callback);
         }
     }
 
@@ -57,11 +58,13 @@ public class ListenData {
 
     private void handleChar(ByteBuffer buffer, Callback callback) {
         char data = buffer.getChar();
+        System.out.println("a");
         callback.complete(data);
     }
 
     private void handleByteArray(ByteBuffer buffer, Callback callback) {
         byte[] data = new byte[buffer.remaining()];
+        System.out.println("a");
         buffer.get(data);
         callback.complete(data);
     }
