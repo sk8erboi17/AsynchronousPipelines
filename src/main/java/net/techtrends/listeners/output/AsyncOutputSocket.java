@@ -1,6 +1,6 @@
 package net.techtrends.listeners.output;
 
-import net.techtrends.listeners.group.PipelineNetworkManager;
+import net.techtrends.listeners.group.PipelineGroupManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,10 +10,10 @@ import java.util.concurrent.ExecutionException;
 public class AsyncOutputSocket {
 
     public static AsynchronousSocketChannel createOutput(InetSocketAddress inetSocketAddress) {
-        PipelineNetworkManager pipelineNetworkManager = new PipelineNetworkManager(Runtime.getRuntime().availableProcessors() / 2);
+        PipelineGroupManager pipelineGroupManager = new PipelineGroupManager(Runtime.getRuntime().availableProcessors() / 2);
         AsynchronousSocketChannel socketChannel;
         try {
-            socketChannel = pipelineNetworkManager.createChannel(inetSocketAddress);
+            socketChannel = pipelineGroupManager.createChannel(inetSocketAddress);
         } catch (IOException e) {
             throw new RuntimeException("Error while opening socket channel: " + e.getMessage(), e);
         } catch (ExecutionException | InterruptedException e) {
