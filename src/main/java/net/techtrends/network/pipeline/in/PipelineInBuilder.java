@@ -10,15 +10,22 @@ public class PipelineInBuilder {
 
     private AsynchronousSocketChannel client;
     private boolean allocateDirect = false;
-    private int initBuffer = 1024;
-    private int maxBuffer = 4096;
+    private int initSizeBuffer;
+    private int maxSizeBuffer;
     private AggregateCallback aggregateCallback;
 
     public PipelineInBuilder configureAggregateCallback(List<Callback> callbacks) {
         this.aggregateCallback = new AggregateCallback(callbacks);
         return this;
     }
-
+    public PipelineInBuilder setInitSize(int initSizeBuffer) {
+        this.initSizeBuffer = initSizeBuffer;
+        return this;
+    }
+    public PipelineInBuilder setMaxSize(int maxSizeBuffer) {
+        this.maxSizeBuffer = maxSizeBuffer;
+        return this;
+    }
     public PipelineInBuilder client(AsynchronousSocketChannel client) {
         this.client = client;
         return this;
@@ -29,17 +36,7 @@ public class PipelineInBuilder {
         return this;
     }
 
-    public PipelineInBuilder initBuffer(int initBuffer) {
-        this.initBuffer = initBuffer;
-        return this;
-    }
-
-    public PipelineInBuilder maxBuffer(int maxBuffer) {
-        this.maxBuffer = maxBuffer;
-        return this;
-    }
-
     public PipelineIn build() {
-        return new PipelineIn(client, allocateDirect, initBuffer, maxBuffer, aggregateCallback);
+        return new PipelineIn(client, allocateDirect, initSizeBuffer, maxSizeBuffer, aggregateCallback);
     }
 }

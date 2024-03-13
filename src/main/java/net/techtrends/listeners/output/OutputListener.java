@@ -8,6 +8,7 @@ import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 
 public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     private final AsynchronousSocketChannel socketChannel;
@@ -210,13 +211,20 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     }
 
     private boolean writeOutputBuffer() {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+            CompletableFuture.runAsync(() -> {
+                socketChannel.write(outputBuffer,outputBuffer,this);
+                future.complete(true);
+            });
+
+
         try {
-            socketChannel.write(outputBuffer).get();
-            return true;
+            return future.get();
         } catch (InterruptedException | ExecutionException e) {
             return false;
         }
     }
+
 
     @Override
     public void completed(Integer bytesWritten, ByteBuffer buffer) {

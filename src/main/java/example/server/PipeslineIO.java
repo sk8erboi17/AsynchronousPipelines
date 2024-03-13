@@ -24,6 +24,7 @@ public class PipeslineIO {
         PipelineOut pipelineOut = buildPipelinesOut(client);
         Callback responseCallback = new CallbackBuilder()
                 .onComplete(o -> Executors.newSingleThreadScheduledExecutor().execute(() -> {
+
                     System.out.println(o);
                     pipelineOut.registerRequest(new SayHelloToClient("Message from Embedded Server: Hi Client!"));
                 }))
@@ -31,6 +32,8 @@ public class PipeslineIO {
                 .build();
 
         new PipelineInBuilder()
+                .setInitSize(4096*2)
+                .setMaxSize(4096*4)
                 .configureAggregateCallback(Collections.singletonList(responseCallback))
                 .client(client)
                 .build();

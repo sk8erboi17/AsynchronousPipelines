@@ -9,6 +9,10 @@ import java.nio.charset.StandardCharsets;
 public class ListenData {
 
     public void listen(ByteBuffer buffer, Callback callback) {
+        if (buffer.remaining() <= 0) {
+            System.out.println("a");
+            return;
+        }
         byte marker = buffer.get();
         if (marker >= 0x01 && marker <= 0x06) {
 
