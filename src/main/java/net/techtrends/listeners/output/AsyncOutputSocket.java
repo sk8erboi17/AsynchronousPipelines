@@ -14,10 +14,8 @@ public class AsyncOutputSocket {
         AsynchronousSocketChannel socketChannel;
         try {
             socketChannel = pipelineGroupManager.createChannel(inetSocketAddress);
-        } catch (IOException e) {
+        } catch (IOException | ExecutionException | InterruptedException e) {
             throw new RuntimeException("Error while opening socket channel: " + e.getMessage(), e);
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
         }
         return socketChannel;
     }
@@ -28,7 +26,7 @@ public class AsyncOutputSocket {
             try {
                 socketChannel.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Failed to close socket channel", e);
             }
         }
     }

@@ -11,7 +11,7 @@ public class HttpBuilder {
 
     private final Map<String, String> headers = new HashMap<>();
     private URI uri;
-    private String method = "GET"; // Default method
+    private String method = "GET";
     private String body;
     private Duration timeout;
 
@@ -72,10 +72,8 @@ public class HttpBuilder {
                 builder.GET();
         }
 
-        // Add the headers
         headers.forEach(builder::header);
 
-        // Set timeout if present
         if (timeout != null) {
             builder.timeout(timeout);
         }

@@ -30,22 +30,16 @@ public class Listener {
         executors.execute(() -> serverSocketChannel.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
             @Override
             public void completed(AsynchronousSocketChannel socketChannel, Void attachment) {
-                try {
-                    connectionRequest.acceptConnection(socketChannel);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                connectionRequest.acceptConnection(socketChannel);
                 serverSocketChannel.accept(null, this);
             }
 
             @Override
             public void failed(Throwable exc, Void attachment) {
-                try {
-                    exc.printStackTrace();
-                } catch (RuntimeException e) {
-                    e.printStackTrace();
-                }
+                throw new RuntimeException("Error while opening socket channel: " + exc.getMessage(), exc);
+
             }
+
         }));
     }
 

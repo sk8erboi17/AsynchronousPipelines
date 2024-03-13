@@ -5,4 +5,5 @@ public interface Callback {
     void complete(Object o);
 
     void completeExceptionally(Throwable throwable);
+    
 }

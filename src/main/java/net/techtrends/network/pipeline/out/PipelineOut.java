@@ -13,7 +13,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class PipelineOut implements Pipeline {
     private final OutputListener outputListener;
+
     private final HttpClient httpClient;
+
     private final boolean isHttpEnabled;
 
     public PipelineOut(AsynchronousSocketChannel client, boolean allocateDirect, int initBuffer, boolean isHttpEnabled) {

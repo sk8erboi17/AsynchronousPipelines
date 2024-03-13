@@ -58,13 +58,11 @@ public class ListenData {
 
     private void handleChar(ByteBuffer buffer, Callback callback) {
         char data = buffer.getChar();
-        System.out.println("a");
         callback.complete(data);
     }
 
     private void handleByteArray(ByteBuffer buffer, Callback callback) {
         byte[] data = new byte[buffer.remaining()];
-        System.out.println("a");
         buffer.get(data);
         callback.complete(data);
     }
