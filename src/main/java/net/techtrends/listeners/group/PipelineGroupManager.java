@@ -8,11 +8,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class PipelineNetworkManager {
+public class PipelineGroupManager {
 
     private final AsynchronousChannelGroup channelGroup;
 
-    public PipelineNetworkManager(int numThreads) {
+    public PipelineGroupManager(int numThreads) {
         try {
             ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
             channelGroup = AsynchronousChannelGroup.withThreadPool(executorService);
