@@ -24,7 +24,7 @@ public class ListenData {
         } else {
             try {
                 String data = StandardCharsets.UTF_8.decode(buffer).toString();
-                System.out.println(data);
+                System.err.println("Error to string: " + data);
                 throw new RuntimeException("Error with buffer, do you have enough space?");
             } catch (ClassCastException e) {
                 throw new RuntimeException("Error with buffer, do you have enough space?" + e.getMessage(), e);
