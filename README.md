@@ -3,9 +3,11 @@
 
 The **pipeline** is designed to organize and manage asynchronous data flows in network applications, providing flexibility and modularity in handling HTTP and Socket communications.
 
+[Poppins (2)](https://github.com/PeppinoTechTrends/AsynchronousPipelines/assets/125193665/0024b524-c1ec-4029-95a8-5fcd912cb457)
 This methodology facilitates the efficient processing of data streams and asynchronous operations, ensuring applications can scale and adapt to various networking tasks effortlessly. By encapsulating the complexities of asynchronous communication into a structured pipeline, developers can concentrate on the application's core logic while utilizing a robust mechanism for data transmission and processing.
 
-## Building Our First Pipeline
+## Building Our First Pipeline!
+
 
 ### Setting Up Our First Output/Input Socket
 
