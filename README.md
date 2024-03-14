@@ -16,7 +16,7 @@ These channels cater to distinct purposes, as suggested by their names: one for 
 **`AsyncChannelSocket.createChannel(...)`**: This method establishes and opens an `AsynchronousSocketChannel`. It connects the channel to a specific remote address, in this instance, `localhost` with designated ports.
 
 ``` java
-`private final static AsynchronousSocketChannel socketChannel = AsyncChannelSocket.createChannel(new InetSocketAddress("localhost", 8082));
+private final static AsynchronousSocketChannel socketChannel = AsyncChannelSocket.createChannel(new InetSocketAddress("localhost", 8082));
 ``` 
 #### Receiving an Input
 
@@ -166,7 +166,7 @@ public static void buildPipelinesHttpOut(AsynchronousSocketChannel client) {
 This method establishes an output pipeline for dispatching a message to an embedded server via socket communication.
 
 ```java
-`public static void buildPipelinesSocketOut(AsynchronousSocketChannel client) {
+public static void buildPipelinesSocketOut(AsynchronousSocketChannel client) {
     PipelineOut pipelineOut = new PipelineOutBuilder(client).allocateDirect(true).setBufferSize(4096).buildSocket();
     pipelineOut.registerRequest(new SayHelloToEmbeddedServer("Message from Client: Hi Embedded Server!"));
 }
