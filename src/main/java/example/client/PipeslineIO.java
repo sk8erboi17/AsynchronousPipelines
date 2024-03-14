@@ -32,10 +32,9 @@ public class PipeslineIO {
 
         Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
             pipelineOut.registerRequest(new SayHelloToEmbeddedServer("Message from Client: Hi Embedded Server!"));
-            },1,1, TimeUnit.NANOSECONDS);
+        }, 1, 1, TimeUnit.NANOSECONDS);
 
-        }
-
+    }
 
 
     public static void buildPipelinesIn(AsynchronousSocketChannel client) {

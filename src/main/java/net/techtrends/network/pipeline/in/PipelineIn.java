@@ -10,7 +10,7 @@ public class PipelineIn {
     private static InputListener inputListener;
 
     public PipelineIn(AsynchronousSocketChannel client, boolean allocateDirect, int bufferSize, Callback callback) {
-        inputListener = new InputListener(client,  bufferSize, callback);
+        inputListener = new InputListener(client, bufferSize, callback);
         inputListener.startRead(new BufferBuilder().setInitSize(bufferSize).allocateDirect(allocateDirect).build());
     }
 

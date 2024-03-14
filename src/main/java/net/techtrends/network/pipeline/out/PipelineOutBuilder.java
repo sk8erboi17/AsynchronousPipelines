@@ -11,6 +11,7 @@ public class PipelineOutBuilder {
     public PipelineOutBuilder(AsynchronousSocketChannel client) {
         this.client = client;
     }
+
     public PipelineOutBuilder() {
     }
 
@@ -33,8 +34,6 @@ public class PipelineOutBuilder {
     public PipelineOut buildHTTP() {
         return new PipelineOut();
     }
-
-
 
 
 }

@@ -8,7 +8,7 @@ public class SayHelloToEmbeddedServer implements Request {
     private final String message;
 
     public SayHelloToEmbeddedServer(String message) {
-     this.message = message;
+        this.message = message;
     }
 
     @Override

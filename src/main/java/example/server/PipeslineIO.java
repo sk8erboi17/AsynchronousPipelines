@@ -9,13 +9,12 @@ import net.techtrends.network.pipeline.out.PipelineOutBuilder;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Collections;
-import java.util.concurrent.Executors;
 
 public class PipeslineIO {
     public static PipelineOut buildPipelinesOut(AsynchronousSocketChannel client) {
         return new PipelineOutBuilder(client)
                 .allocateDirect(true)
-                .setBufferSize(4096*20)
+                .setBufferSize(4096 * 20)
                 .buildSocket();
     }
 
@@ -31,7 +30,7 @@ public class PipeslineIO {
                 .build();
 
         new PipelineInBuilder(client)
-                .setBufferSize(4096*128)
+                .setBufferSize(4096 * 128)
                 .configureAggregateCallback(Collections.singletonList(responseCallback))
                 .build();
 

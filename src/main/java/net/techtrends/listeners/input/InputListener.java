@@ -1,6 +1,5 @@
 package net.techtrends.listeners.input;
 
-import net.techtrends.BufferBuilder;
 import net.techtrends.exception.MaxBufferSizeExceededException;
 import net.techtrends.listeners.input.operations.ListenData;
 import net.techtrends.listeners.output.AsyncChannelSocket;
@@ -33,19 +32,19 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
             AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
             throw new RuntimeException("Not enough byte to read");
         }
-            if (buffer.remaining() >= bufferSize) {
-                AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
-                try {
-                    throw new MaxBufferSizeExceededException();
-                } catch (MaxBufferSizeExceededException e) {
-                    e.printStackTrace();
-                }
-                return;
+        if (buffer.remaining() >= bufferSize) {
+            AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
+            try {
+                throw new MaxBufferSizeExceededException();
+            } catch (MaxBufferSizeExceededException e) {
+                e.printStackTrace();
             }
+            return;
+        }
 
-            buffer.flip();
-            send(buffer);
-            buffer.clear();
+        buffer.flip();
+        send(buffer);
+        buffer.clear();
 
         readThread.execute(() -> startRead(buffer));
     }
@@ -56,14 +55,14 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
         processData.listen(buffer, callback);
     }
 
-    public void startRead(ByteBuffer buffer){
-        socketChannel.read(buffer,buffer,this);
+    public void startRead(ByteBuffer buffer) {
+        socketChannel.read(buffer, buffer, this);
     }
 
     @Override
     public void failed(Throwable exc, ByteBuffer buffer) {
         AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
-        throw new RuntimeException("Error: " +  exc.getMessage(), exc);
+        throw new RuntimeException("Error: " + exc.getMessage(), exc);
     }
 
 }

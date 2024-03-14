@@ -17,7 +17,8 @@ while leveraging a robust mechanism for data transmission and processing.
 These channels are intended for different purposes, as indicated by their names: one for HTTP communication and the
 other for generic socket communication. Let's break down the code for a clearer understanding:
 
-**`AsyncChannelSocket.createChannel(...)`**: This method creates and opens an `AsynchronousSocketChannel`. It connects the
+**`AsyncChannelSocket.createChannel(...)`**: This method creates and opens an `AsynchronousSocketChannel`. It connects
+the
 channel to a specified remote address, in this case, `localhost` with specific ports. The exact implementation details
 of `createOutput` would depend on the library or framework being used.
 

@@ -1,7 +1,6 @@
 package net.techtrends.listeners.input.operations;
 
 import net.techtrends.listeners.response.Callback;
-import net.techtrends.network.pipeline.out.content.http.HttpFormatter;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -23,11 +22,11 @@ public class ListenData {
                 case 0x06 -> handleByteArray(buffer, callback);
             }
         } else {
-            try{
+            try {
                 String data = StandardCharsets.UTF_8.decode(buffer).toString();
                 System.out.println(data);
                 throw new RuntimeException("Error with buffer, do you have enough space?");
-            }catch (ClassCastException e){
+            } catch (ClassCastException e) {
                 throw new RuntimeException("Error with buffer, do you have enough space?" + e.getMessage(), e);
             }
         }

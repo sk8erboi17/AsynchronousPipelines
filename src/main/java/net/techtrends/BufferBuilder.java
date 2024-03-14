@@ -7,17 +7,17 @@ public class BufferBuilder {
 
     private int initialSize;
 
-    public BufferBuilder setInitSize(int initSize){
+    public BufferBuilder setInitSize(int initSize) {
         this.initialSize = initSize;
         return this;
     }
 
-    public BufferBuilder allocateDirect(boolean allocateDirect){
+    public BufferBuilder allocateDirect(boolean allocateDirect) {
         this.allocateDirect = allocateDirect;
         return this;
     }
 
-    public ByteBuffer build(){
+    public ByteBuffer build() {
         return allocateDirect ? ByteBuffer.allocateDirect(initialSize) : ByteBuffer.allocate(initialSize);
     }
 

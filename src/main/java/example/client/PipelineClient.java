@@ -7,6 +7,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 
 public class PipelineClient {
     private final static AsynchronousSocketChannel socketChannel = AsyncChannelSocket.createChannel(new InetSocketAddress("localhost", 8082));
+
     public static void main(String[] args) {
         setupOutput();
         setupInput();

@@ -146,7 +146,6 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     }
 
 
-
     @Override
     public void completed(Integer bytesWritten, ByteBuffer buffer) {
         if (bytesWritten < 0) {
