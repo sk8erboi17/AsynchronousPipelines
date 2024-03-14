@@ -13,9 +13,7 @@ public class ListenData {
             return;
         }
         byte marker = buffer.get();
-        System.out.println(marker);
         if (marker >= 0x01 && marker <= 0x06) {
-
             switch (marker) {
                 case 0x01 -> handleString(buffer, callback);
                 case 0x02 -> handleInt(buffer, callback);
@@ -25,19 +23,19 @@ public class ListenData {
                 case 0x06 -> handleByteArray(buffer, callback);
             }
         } else {
-            handleHTTP(buffer,callback);
+            try{
+                String data = StandardCharsets.UTF_8.decode(buffer).toString();
+                System.out.println(data);
+                throw new RuntimeException("Error with buffer, do you have enough space?");
+            }catch (ClassCastException e){
+                throw new RuntimeException("Error with buffer, do you have enough space?" + e.getMessage(), e);
+            }
         }
     }
 
 
     private void handleString(ByteBuffer buffer, Callback callback) {
         String data = StandardCharsets.UTF_8.decode(buffer).toString();
-        callback.complete(data);
-    }
-
-    private void handleHTTP(ByteBuffer buffer, Callback callback) {
-        String data = StandardCharsets.UTF_8.decode(buffer).toString();
-        HttpFormatter.formatHttpResponse(data);
         callback.complete(data);
     }
 

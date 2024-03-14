@@ -8,7 +8,6 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     private final AsynchronousSocketChannel socketChannel;
@@ -59,7 +58,6 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         outputBuffer.clear();
         outputBuffer.put(marker);
         outputBuffer.put(bytes);
-        outputBuffer.put((byte) 0);
         outputBuffer.flip();
 
         performSend(callback);
@@ -143,20 +141,10 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
         performSend(callback);
     }
 
-
-    private boolean writeOutputBuffer() {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
-        CompletableFuture.runAsync(() -> {
-            socketChannel.write(outputBuffer, outputBuffer, this);
-            future.complete(true);
-        });
-
-        try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            return false;
-        }
+    private void writeOutputBuffer() {
+        CompletableFuture.runAsync(() -> socketChannel.write(outputBuffer, outputBuffer, this));
     }
+
 
 
     @Override
@@ -173,28 +161,18 @@ public class OutputListener implements CompletionHandler<Integer, ByteBuffer> {
     public void failed(Throwable exc, ByteBuffer buffer) {
         System.err.println("Error while sending data: " + exc.getMessage());
         exc.printStackTrace();
-        AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
+        AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
     }
 
     private void performSend(Callback callback) {
         if (!socketChannel.isOpen()) {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
+            AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
+            callback.complete(false);
             return;
         }
 
-        CompletableFuture.supplyAsync(this::writeOutputBuffer).whenComplete((result, throwable) -> {
-            if (throwable == null || result) {
-                callback.complete(true);
-                return;
-            }
-
-            callback.completeExceptionally(throwable);
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-        });
-
+        writeOutputBuffer();
     }
 
-    public void close() {
-        AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-    }
+
 }

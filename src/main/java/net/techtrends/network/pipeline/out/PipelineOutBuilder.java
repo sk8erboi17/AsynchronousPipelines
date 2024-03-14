@@ -7,16 +7,11 @@ public class PipelineOutBuilder {
     private AsynchronousSocketChannel client;
     private boolean allocateDirect = false;
     private int bufferSize = 1024;
-    private boolean isHttpEnabled = false;
 
-    public PipelineOutBuilder client(AsynchronousSocketChannel client) {
+    public PipelineOutBuilder(AsynchronousSocketChannel client) {
         this.client = client;
-        return this;
     }
-
-    public PipelineOutBuilder setHttpEnabled(boolean httpEnabled) {
-        this.isHttpEnabled = httpEnabled;
-        return this;
+    public PipelineOutBuilder() {
     }
 
 
@@ -30,7 +25,16 @@ public class PipelineOutBuilder {
         return this;
     }
 
-    public PipelineOut build() {
-        return new PipelineOut(client, allocateDirect, bufferSize, isHttpEnabled);
+    public PipelineOut buildSocket() {
+        PipelineOut pipelineOut = new PipelineOut(client, allocateDirect, bufferSize);
+        return pipelineOut;
     }
+
+    public PipelineOut buildHTTP() {
+        return new PipelineOut();
+    }
+
+
+
+
 }

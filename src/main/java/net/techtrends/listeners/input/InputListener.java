@@ -3,7 +3,7 @@ package net.techtrends.listeners.input;
 import net.techtrends.BufferBuilder;
 import net.techtrends.exception.MaxBufferSizeExceededException;
 import net.techtrends.listeners.input.operations.ListenData;
-import net.techtrends.listeners.output.AsyncOutputSocket;
+import net.techtrends.listeners.output.AsyncChannelSocket;
 import net.techtrends.listeners.response.Callback;
 
 import java.nio.ByteBuffer;
@@ -30,12 +30,11 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
     @Override
     public void completed(Integer bytesRead, ByteBuffer buffer) {
         if (bytesRead < 0) {
-            AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-            return;
+            AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
+            throw new RuntimeException("Not enough byte to read");
         }
-        if (bytesRead > 0) {
-            if (buffer.capacity() > bufferSize) {
-                AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
+            if (buffer.remaining() >= bufferSize) {
+                AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
                 try {
                     throw new MaxBufferSizeExceededException();
                 } catch (MaxBufferSizeExceededException e) {
@@ -43,10 +42,10 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
                 }
                 return;
             }
+
             buffer.flip();
             send(buffer);
             buffer.clear();
-        }
 
         readThread.execute(() -> startRead(buffer));
     }
@@ -63,10 +62,8 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
     @Override
     public void failed(Throwable exc, ByteBuffer buffer) {
-        AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
+        AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
+        throw new RuntimeException("Error: " +  exc.getMessage(), exc);
     }
 
-    public void close() {
-        AsyncOutputSocket.closeOutputSocketChannel(socketChannel);
-    }
 }

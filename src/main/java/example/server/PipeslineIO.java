@@ -13,28 +13,26 @@ import java.util.concurrent.Executors;
 
 public class PipeslineIO {
     public static PipelineOut buildPipelinesOut(AsynchronousSocketChannel client) {
-        return new PipelineOutBuilder()
-                .client(client)
+        return new PipelineOutBuilder(client)
                 .allocateDirect(true)
-                .setBufferSize(2048)
-                .build();
+                .setBufferSize(4096*20)
+                .buildSocket();
     }
 
     public static void buildPipelinesIn(AsynchronousSocketChannel client) {
         PipelineOut pipelineOut = buildPipelinesOut(client);
-        Callback responseCallback = new CallbackBuilder()
-                .onComplete(o -> Executors.newSingleThreadScheduledExecutor().execute(() -> {
 
+        Callback responseCallback = new CallbackBuilder()
+                .onComplete(o -> {
                     System.out.println(o);
                     pipelineOut.registerRequest(new SayHelloToClient("Message from Embedded Server: Hi Client!"));
-                }))
+                })
                 .onException(Throwable::printStackTrace)
                 .build();
 
-        new PipelineInBuilder()
-                .setBufferSize(4096*2)
+        new PipelineInBuilder(client)
+                .setBufferSize(4096*128)
                 .configureAggregateCallback(Collections.singletonList(responseCallback))
-                .client(client)
                 .build();
 
     }

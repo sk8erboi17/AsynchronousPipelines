@@ -8,22 +8,22 @@ import java.util.List;
 
 public class PipelineInBuilder {
 
-    private AsynchronousSocketChannel client;
+    private final AsynchronousSocketChannel client;
     private boolean allocateDirect = false;
-    private int bufferSize;
+    private int bufferSize = 4096;
     private AggregateCallback aggregateCallback;
+
+    public PipelineInBuilder(AsynchronousSocketChannel client) {
+        this.client = client;
+    }
 
     public PipelineInBuilder configureAggregateCallback(List<Callback> callbacks) {
         this.aggregateCallback = new AggregateCallback(callbacks);
         return this;
     }
+
     public PipelineInBuilder setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
-        return this;
-    }
-
-    public PipelineInBuilder client(AsynchronousSocketChannel client) {
-        this.client = client;
         return this;
     }
 
@@ -33,6 +33,8 @@ public class PipelineInBuilder {
     }
 
     public PipelineIn build() {
-        return new PipelineIn(client, allocateDirect, bufferSize, aggregateCallback);
+        PipelineIn pipeline = new PipelineIn(client, allocateDirect, bufferSize, aggregateCallback);
+        return pipeline;
     }
+
 }

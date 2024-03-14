@@ -4,12 +4,13 @@ import net.techtrends.listeners.group.PipelineGroupManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.AsynchronousChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
 
-public class AsyncOutputSocket {
+public class AsyncChannelSocket {
 
-    public static AsynchronousSocketChannel createOutput(InetSocketAddress inetSocketAddress) {
+    public static AsynchronousSocketChannel createChannel(InetSocketAddress inetSocketAddress) {
         PipelineGroupManager pipelineGroupManager = new PipelineGroupManager(Runtime.getRuntime().availableProcessors() / 2);
         AsynchronousSocketChannel socketChannel;
         try {
@@ -20,7 +21,7 @@ public class AsyncOutputSocket {
         return socketChannel;
     }
 
-    public static void closeOutputSocketChannel(AsynchronousSocketChannel socketChannel) {
+    public static void closeChannelSocketChannel(AsynchronousSocketChannel socketChannel) {
 
         if (socketChannel != null && socketChannel.isOpen()) {
             try {

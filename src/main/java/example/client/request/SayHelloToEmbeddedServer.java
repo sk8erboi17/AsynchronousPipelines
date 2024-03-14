@@ -1,14 +1,14 @@
-package example.server.request;
+package example.client.request;
 
 import net.techtrends.listeners.response.Callback;
 import net.techtrends.listeners.response.CallbackBuilder;
 import net.techtrends.network.pipeline.out.content.Request;
 
-public class SayHelloToClient implements Request {
+public class SayHelloToEmbeddedServer implements Request {
     private final String message;
 
-    public SayHelloToClient(String message) {
-        this.message = message;
+    public SayHelloToEmbeddedServer(String message) {
+     this.message = message;
     }
 
     @Override
@@ -20,7 +20,6 @@ public class SayHelloToClient implements Request {
     public Callback getCallback() {
         return new CallbackBuilder()
                 .onComplete(null)
-                .onException(Throwable::printStackTrace)
-                .build();
+                .onException(Throwable::printStackTrace).build();
     }
 }

@@ -2,22 +2,10 @@ package net.techtrends.network.pipeline.out.content;
 
 import net.techtrends.listeners.response.Callback;
 
-public class Request {
-    private final Object message;
+public interface Request {
 
-    private final Callback callback;
+    Object getMessage();
 
-    public Request(Callback callback, Object message) {
-        this.callback = callback;
-        this.message = message;
-    }
-
-    public Object getMessage() {
-        return message;
-    }
-
-    public Callback getCallback() {
-        return callback;
-    }
+    Callback getCallback();
 
 }

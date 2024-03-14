@@ -5,7 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66d8af5b-6642-4cbe-9837-0f8b3fd595fe" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/example/client/request/SayHelloToEmbeddedServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipeslineIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipeslineIO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/request/GetUsersFromWebServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/request/GetUsersFromWebServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/request/SayHelloToEmbeededServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/server/PipeslineIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/server/PipeslineIO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/server/request/SayHelloToClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/server/request/SayHelloToClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/Listener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/Listener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/AsyncInputSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/AsyncInputSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/InputListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/InputListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/operations/ListenData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/operations/ListenData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/AsyncOutputSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/AsyncChannelSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/OutputListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/OutputListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/Pipeline.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/in/PipelineIn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/in/PipelineIn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/in/PipelineInBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/in/PipelineInBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOut.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOut.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOutBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOutBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/Request.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/http/Http.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/http/Http.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +77,7 @@
     "Maven.AsynchronousServerClientLib [clean].executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
@@ -184,7 +208,8 @@
       <workItem from="1710146216669" duration="21578000" />
       <workItem from="1710255239512" duration="876000" />
       <workItem from="1710265957308" duration="140000" />
-      <workItem from="1710266121302" duration="26068000" />
+      <workItem from="1710266121302" duration="32821000" />
+      <workItem from="1710398080314" duration="10053000" />
     </task>
     <servers />
   </component>
@@ -201,5 +226,15 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.util.concurrent.ExecutionException" package="java.util.concurrent" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

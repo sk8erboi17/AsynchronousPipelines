@@ -17,12 +17,12 @@ while leveraging a robust mechanism for data transmission and processing.
 These channels are intended for different purposes, as indicated by their names: one for HTTP communication and the
 other for generic socket communication. Let's break down the code for a clearer understanding:
 
-**`AsyncOutputSocket.createOutput(...)`**: This method creates and opens an `AsynchronousSocketChannel`. It connects the
+**`AsyncChannelSocket.createChannel(...)`**: This method creates and opens an `AsynchronousSocketChannel`. It connects the
 channel to a specified remote address, in this case, `localhost` with specific ports. The exact implementation details
 of `createOutput` would depend on the library or framework being used.
 
  ```java  
-private final static AsynchronousSocketChannel socketChannel = AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8082));  
+private final static AsynchronousSocketChannel socketChannel = AsyncChannelSocket.createChannel(new InetSocketAddress("localhost", 8082));  
  ```
 
 **`httpChannel`**: This variable holds an `AsynchronousSocketChannel` intended for HTTP communication. This channel is
@@ -31,7 +31,7 @@ common setup for local development and testing of web applications, where the ap
 requests on port `8080`.
 
  ```java  
- private final static AsynchronousSocketChannel httpChannel = AsyncOutputSocket.createOutput(new InetSocketAddress("localhost", 8080));  
+ private final static AsynchronousSocketChannel httpChannel = AsyncChannelSocket.createChannel(new InetSocketAddress("localhost", 8080));  
  ```
 
 **`socketChannel`**: Similar to `httpChannel`, this static variable holds an `AsynchronousSocketChannel`, but it's

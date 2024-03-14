@@ -12,35 +12,24 @@ import java.util.concurrent.Executors;
 
 public class Listener {
     private static final Listener instanceListener = new Listener();
-    private final ExecutorService executors;
-
-    public Listener() {
-        executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2, r -> {
-            Thread t = new Thread(r);
-            t.setUncaughtExceptionHandler(new ServerExceptionHandler());
-            return t;
-        });
-    }
-
-    public static Listener getInstance() {
-        return instanceListener;
-    }
+    private final ExecutorService  executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2);
 
     public void startConnectionListen(AsynchronousServerSocketChannel serverSocketChannel, ConnectionRequest connectionRequest) {
         executors.execute(() -> serverSocketChannel.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
             @Override
             public void completed(AsynchronousSocketChannel socketChannel, Void attachment) {
                 connectionRequest.acceptConnection(socketChannel);
-                serverSocketChannel.accept(null, this);
+                serverSocketChannel.accept(attachment, this);
             }
 
             @Override
             public void failed(Throwable exc, Void attachment) {
-                throw new RuntimeException("Error while opening socket channel: " + exc.getMessage(), exc);
-
+               throw new RuntimeException("Error with connection " + exc.getMessage(), exc);
             }
-
         }));
     }
 
+    public static Listener getInstance() {
+        return instanceListener;
+    }
 }
