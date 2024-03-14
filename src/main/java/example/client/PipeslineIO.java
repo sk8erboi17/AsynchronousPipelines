@@ -20,15 +20,14 @@ public class PipeslineIO {
     //HTTP REQUEST HERE
     public static void buildPipelinesHttpOut() {
         PipelineOut pipelineOut = new PipelineOutBuilder().buildHTTP();
-
         Http request = new GetUsersFromWebServer();
         pipelineOut.registerRequest(request);
-
     }
 
     ///EMBEDDED SERVER REQUEST HERE
     public static void buildPipelinesSocketOut(AsynchronousSocketChannel client) {
         PipelineOut pipelineOut = new PipelineOutBuilder(client).allocateDirect(true).setBufferSize(4096).buildSocket();
+        pipelineOut.registerRequest(new SayHelloToEmbeddedServer("Message from Client: Hi Embedded Server!"));
 
         Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
             pipelineOut.registerRequest(new SayHelloToEmbeddedServer("Message from Client: Hi Embedded Server!"));
