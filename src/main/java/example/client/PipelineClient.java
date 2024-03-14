@@ -11,6 +11,8 @@ public class PipelineClient {
     public static void main(String[] args) {
         setupOutput();
         setupInput();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> AsyncChannelSocket.closeChannelSocketChannel(socketChannel)));
     }
 
     private static void setupOutput() {
@@ -21,5 +23,6 @@ public class PipelineClient {
     private static void setupInput() {
         PipeslineIO.buildPipelinesIn(socketChannel);
     }
+
 
 }

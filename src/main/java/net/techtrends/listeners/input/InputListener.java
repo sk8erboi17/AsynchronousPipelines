@@ -12,7 +12,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
-    private final ExecutorService readThread = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() / 2);
+    private final ExecutorService readThread;
+
+    private final ListenData processData;
 
     private final AsynchronousSocketChannel socketChannel;
 
@@ -24,6 +26,8 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
         this.socketChannel = socketChannel;
         this.callback = callback;
         this.bufferSize = bufferSize;
+        this.readThread = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() / 2);
+        this.processData = new ListenData();
     }
 
     @Override
@@ -51,7 +55,6 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
 
     private void send(ByteBuffer buffer) {
-        ListenData processData = new ListenData();
         processData.listen(buffer, callback);
     }
 
@@ -61,6 +64,7 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
     @Override
     public void failed(Throwable exc, ByteBuffer buffer) {
+        System.out.println(exc.getClass());
         AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
         throw new RuntimeException("Error: " + exc.getMessage(), exc);
     }

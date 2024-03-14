@@ -12,7 +12,7 @@ public class SayHelloToClient implements Request {
     }
 
     @Override
-    public Object getMessage() {
+    public String getMessage() {
         return message;
     }
 

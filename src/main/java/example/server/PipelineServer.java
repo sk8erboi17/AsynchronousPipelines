@@ -3,6 +3,7 @@ package example.server;
 
 import net.techtrends.Listener;
 import net.techtrends.listeners.input.AsyncInputSocket;
+import net.techtrends.listeners.output.AsyncChannelSocket;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,7 +22,10 @@ public class PipelineServer {
     }
 
     private static void setupIncomeClients() {
-        Listener.getInstance().startConnectionListen(server, PipeslineIO::buildPipelinesIn);
+        Listener.getInstance().startConnectionListen(server, client -> {
+            PipeslineIO.buildPipelinesIn(client);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> AsyncChannelSocket.closeChannelSocketChannel(client)));
+        });
     }
 
 }

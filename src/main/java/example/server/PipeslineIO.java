@@ -11,7 +11,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Collections;
 
 public class PipeslineIO {
-    public static PipelineOut buildPipelinesOut(AsynchronousSocketChannel client) {
+    private static PipelineOut buildPipelinesOut(AsynchronousSocketChannel client) {
         return new PipelineOutBuilder(client)
                 .allocateDirect(true)
                 .setBufferSize(4096 * 20)

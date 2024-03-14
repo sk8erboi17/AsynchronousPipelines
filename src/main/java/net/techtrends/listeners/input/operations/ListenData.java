@@ -32,7 +32,6 @@ public class ListenData {
         }
     }
 
-
     private void handleString(ByteBuffer buffer, Callback callback) {
         String data = StandardCharsets.UTF_8.decode(buffer).toString();
         callback.complete(data);
