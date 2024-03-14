@@ -6,15 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="66d8af5b-6642-4cbe-9837-0f8b3fd595fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/server/PipelineServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/server/PipelineServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/server/PipeslineIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/server/PipeslineIO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/server/request/SayHelloToClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/server/request/SayHelloToClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/InputListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/InputListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/operations/ListenData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/operations/ListenData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/archetype-resources/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/archetype-resources/src/main/java/App.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/archetype-resources/src/test/java/AppTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipeslineIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipeslineIO.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,7 +188,7 @@
       <workItem from="1710255239512" duration="876000" />
       <workItem from="1710265957308" duration="140000" />
       <workItem from="1710266121302" duration="32821000" />
-      <workItem from="1710398080314" duration="12091000" />
+      <workItem from="1710398080314" duration="13187000" />
     </task>
     <servers />
   </component>
