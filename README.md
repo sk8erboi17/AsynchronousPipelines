@@ -31,7 +31,7 @@ private static AsynchronousServerSocketChannel server = AsyncInputSocket.createI
 ```java
 private static void setupIncomingClients() {
    Listener.getInstance().startConnectionListen(server, client -> {
-       PipelineIO.buildPipelinesIn(client);
+       buildPipelinesIn(client);
        setupOutputForClients(client);
    });
 }
@@ -45,7 +45,7 @@ private static void setupIncomingClients() {
 
     -   **`client`**: Represents an individual client connection. This parameter is likely an instance of `AsynchronousSocketChannel` or a similar class enabling asynchronous network socket communication.
 
-    -   **`PipelineIO.buildPipelinesIn(client)`**: Constructs an input pipeline for each connected client, configured to asynchronously receive and process data from the client. The specific configuration and processing logic are encapsulated within the `buildPipelinesIn` method.
+    -   **`buildPipelinesIn(client)`**: Constructs an input pipeline for each connected client, configured to asynchronously receive and process data from the client. The specific configuration and processing logic are encapsulated within the `buildPipelinesIn` method.
 
     -   **`setupOutputForClients(client)`**: Beyond configuring the input pipeline, it's also essential to establish an output pipeline or a comparable mechanism for sending data back to the client. The `setupOutputForClients` method handles this configuration.
 
