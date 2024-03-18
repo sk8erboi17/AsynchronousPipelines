@@ -153,7 +153,7 @@ public class SayHelloToEmbeddedServer implements Request {
 This method assembles an output pipeline tailored for HTTP communication, intended for dispatching an HTTP request to a web server.
 
 ```java
-public static void buildPipelinesHttpOut(AsynchronousSocketChannel client) {
+public static void buildPipelinesHttpOut() {
     PipelineOut pipelineOut = new PipelineOutBuilder().buildHTTP();
     Http request = new GetUsersFromWebServer();
     pipelineOut.registerRequest(request);
