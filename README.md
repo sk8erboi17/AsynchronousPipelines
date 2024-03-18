@@ -14,7 +14,7 @@ This methodology facilitates the efficient processing of data streams and asynch
 
 #### Sending an Output
 
-These channels cater to distinct purposes, as suggested by their names: one for HTTP communication and the other for generic socket communication. Let's delve into the code for a better understanding:
+These channels cater to distinct purposes, as suggested by their names is for generic socket communication. Let's delve into the code for a better understanding:
 
 **`AsyncChannelSocket.createChannel(...)`**: This method establishes and opens an `AsynchronousSocketChannel`. It connects the channel to a specific remote address, in this instance, `localhost` with designated ports.
 
