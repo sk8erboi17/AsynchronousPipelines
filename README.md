@@ -1,7 +1,7 @@
 ﻿
 # Pipelines Overview
 
-The **pipeline** is designed to organize and manage asynchronous data flows in network applications, providing flexibility and modularity in handling HTTP and Socket communications.
+The **pipeline** is designed to organize and manage asynchronous data flows in network applications, providing flexibility and modularity in Socket communications.
 
 ![alt text](https://github.com/PeppinoTechTrends/AsynchronousPipelines/assets/125193665/0024b524-c1ec-4029-95a8-5fcd912cb457)
 
@@ -83,36 +83,7 @@ public static void buildPipelinesIn(AsynchronousSocketChannel client) {
 
 ## Constructing Output Pipelines
 
-Before delving into `PipelineBuilderOut` for building output pipelines, it's essential to understand how requests are crafted, either via Socket or HTTP. The `GetUsersFromWebServer` and `SayHelloToEmbeddedServer` classes exemplify two approaches for request creation within an application.
-
-### HTTP Request: `GetUsersFromWebServer`
-
-```java
-public class GetUsersFromWebServer implements Http {
-    @Override
-    public HttpRequest request() {
-        return new HttpBuilder().GET().uri("http://136.243.124.131").build();
-    }
-
-    @Override
-    public Callback response() {
-        return new CallbackBuilder()
-                .onComplete(response -> HttpFormatter.formatHttpResponse(String.valueOf(response)))
-                .onException(exception -> {
-                    throw new RuntimeException("An error occurred while receiving the response " + exception.getMessage(), exception);
-                }).build();
-    }
-
-}
-``` 
--   **`Http` Interface**: By adhering to this interface, `GetUsersFromWebServer` mandates defining a `request()` method, returning an `HttpRequest`.
-
--   **`request()`**: Employs `HttpBuilder`, a builder pattern for assembling an HTTP request. The builder is configured for a GET operation to the URI `http://localhost:8080/api/users`, aimed at retrieving user data from a local web server on port `8080`.
-
--   **`HttpBuilder`**: Aims to simplify HTTP request creation. The builder pattern enhances code readability and fluency.
-
--   **`response()`**: Uses `CallbackBuilder` to construct a callback, managing successful and failed responses.
-
+Before delving into `PipelineBuilderOut` for building output pipelines, it's essential to understand how requests are crafted, either via Socket. `SayHelloToEmbeddedServer` class exemplify an approach for request creation within an application.
 
 ### Socket Request: `SayHelloToEmbeddedServer`
 
@@ -147,22 +118,6 @@ public class SayHelloToEmbeddedServer implements Request {
 
 
 ### Constructing Output Pipelines with `PipelineBuilderOut`
-
-#### HTTP Request Pipeline: `buildPipelinesHttpOut`
-
-This method assembles an output pipeline tailored for HTTP communication, intended for dispatching an HTTP request to a web server.
-
-```java
-public static void buildPipelinesHttpOut() {
-    PipelineOut pipelineOut = new PipelineOutBuilder().buildHTTP();
-    Http request = new GetUsersFromWebServer();
-    pipelineOut.registerRequest(request);
-} 
-``` 
-
--   **`PipelineOutBuilder` Configuration**:
-    -   `.buildHTTP()`: Completes the pipeline setup, generating the `PipelineOut` instance.
--   **Registering and Dispatching an HTTP Request**: `pipelineOut.registerRequest(new GetUsersFromWebServer());` enlists an HTTP GET request to retrieve user data from a web server. The `GetUsersFromWebServer` class, as previously discussed, crafts this request.
 
 ### Socket Request Pipeline: `buildPipelinesSocketOut`
 

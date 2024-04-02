@@ -5,8 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66d8af5b-6642-4cbe-9837-0f8b3fd595fe" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipeslineIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipeslineIO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/request/GetUsersFromWebServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOut.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOut.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/http/Http.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/http/HttpBuilder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/http/HttpFormatter.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,10 +65,10 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Giuseppe/Desktop/Github/DeskWeb/java-client",
+    "last_opened_file_path": "C:/Users/Peppe/Desktop/Project Github",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -167,7 +176,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
+        <option value="jdk-21.0.2-azul-21.0.2-4caba194b151-38275579" />
       </set>
     </attachedChunks>
   </component>
@@ -188,6 +197,7 @@
       <workItem from="1710265957308" duration="140000" />
       <workItem from="1710266121302" duration="32821000" />
       <workItem from="1710398080314" duration="14483000" />
+      <workItem from="1712095925669" duration="230000" />
     </task>
     <servers />
   </component>

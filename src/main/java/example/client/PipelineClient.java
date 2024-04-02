@@ -16,7 +16,6 @@ public class PipelineClient {
     }
 
     private static void setupOutput() {
-        PipeslineIO.buildPipelinesHttpOut();
         PipeslineIO.buildPipelinesSocketOut(socketChannel);
     }
 

@@ -3,7 +3,6 @@ package net.techtrends.network.pipeline.out;
 import net.techtrends.listeners.output.OutputListener;
 import net.techtrends.listeners.response.Callback;
 import net.techtrends.network.pipeline.out.content.Request;
-import net.techtrends.network.pipeline.out.content.http.Http;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -32,12 +31,6 @@ public class PipelineOut {
     public PipelineOut() {
         this.isHttpEnabled = true;
         httpClient = HttpClient.newHttpClient();
-    }
-
-    public void registerRequest(Http http) {
-        if (isHttpEnabled) {
-            sendHttpRequest(http.request(), http.response());
-        }
     }
 
     public void registerRequest(Request request) {
