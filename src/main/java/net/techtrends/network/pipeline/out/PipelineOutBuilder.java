@@ -4,17 +4,13 @@ import java.nio.channels.AsynchronousSocketChannel;
 
 public class PipelineOutBuilder {
 
-    private AsynchronousSocketChannel client;
+    private final AsynchronousSocketChannel client;
     private boolean allocateDirect = false;
     private int bufferSize = 1024;
 
     public PipelineOutBuilder(AsynchronousSocketChannel client) {
         this.client = client;
     }
-
-    public PipelineOutBuilder() {
-    }
-
 
     public PipelineOutBuilder allocateDirect(boolean allocateDirect) {
         this.allocateDirect = allocateDirect;
@@ -27,13 +23,7 @@ public class PipelineOutBuilder {
     }
 
     public PipelineOut buildSocket() {
-        PipelineOut pipelineOut = new PipelineOut(client, allocateDirect, bufferSize);
-        return pipelineOut;
+        return new PipelineOut(client, allocateDirect, bufferSize);
     }
-
-    public PipelineOut buildHTTP() {
-        return new PipelineOut();
-    }
-
 
 }

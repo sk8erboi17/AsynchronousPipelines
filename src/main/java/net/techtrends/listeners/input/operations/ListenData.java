@@ -1,13 +1,14 @@
 package net.techtrends.listeners.input.operations;
 
 import net.techtrends.listeners.response.Callback;
+import net.techtrends.network.AggregateCallback;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class ListenData {
 
-    public void listen(ByteBuffer buffer, Callback callback) {
+    public void listen(ByteBuffer buffer, AggregateCallback callback) {
         if (buffer.remaining() <= 0) {
             return;
         }
@@ -32,35 +33,49 @@ public class ListenData {
         }
     }
 
-    private void handleString(ByteBuffer buffer, Callback callback) {
+    private void handleString(ByteBuffer buffer, AggregateCallback callback) {
         String data = StandardCharsets.UTF_8.decode(buffer).toString();
-        callback.complete(data);
+
+        for (Callback iteratedCallback : callback.getCallbacks()) {
+            iteratedCallback.complete(data);
+        }
+
     }
 
-    private void handleInt(ByteBuffer buffer, Callback callback) {
+    private void handleInt(ByteBuffer buffer, AggregateCallback callback) {
         int data = buffer.getInt();
-        callback.complete(data);
+        for (Callback iteratedCallback : callback.getCallbacks()) {
+            iteratedCallback.complete(data);
+        }
     }
 
-    private void handleFloat(ByteBuffer buffer, Callback callback) {
+    private void handleFloat(ByteBuffer buffer, AggregateCallback callback) {
         float data = buffer.getFloat();
-        callback.complete(data);
+        for (Callback iteratedCallback : callback.getCallbacks()) {
+            iteratedCallback.complete(data);
+        }
     }
 
-    private void handleDouble(ByteBuffer buffer, Callback callback) {
+    private void handleDouble(ByteBuffer buffer, AggregateCallback callback) {
         double data = buffer.getDouble();
-        callback.complete(data);
+        for (Callback iteratedCallback : callback.getCallbacks()) {
+            iteratedCallback.complete(data);
+        }
     }
 
-    private void handleChar(ByteBuffer buffer, Callback callback) {
+    private void handleChar(ByteBuffer buffer, AggregateCallback callback) {
         char data = buffer.getChar();
-        callback.complete(data);
+        for (Callback iteratedCallback : callback.getCallbacks()) {
+            iteratedCallback.complete(data);
+        }
     }
 
-    private void handleByteArray(ByteBuffer buffer, Callback callback) {
+    private void handleByteArray(ByteBuffer buffer, AggregateCallback callback) {
         byte[] data = new byte[buffer.remaining()];
         buffer.get(data);
-        callback.complete(data);
+        for (Callback iteratedCallback : callback.getCallbacks()) {
+            iteratedCallback.complete(data);
+        }
     }
 
 }

@@ -4,24 +4,14 @@ import net.techtrends.listeners.response.Callback;
 
 import java.util.Collection;
 
-public class AggregateCallback implements Callback {
+public class AggregateCallback {
     private final Collection<Callback> callbacks;
 
     public AggregateCallback(Collection<Callback> callbacks) {
         this.callbacks = callbacks;
     }
 
-    @Override
-    public void complete(Object o) {
-        for (Callback callback : callbacks) {
-            callback.complete(o);
-        }
-    }
-
-    @Override
-    public void completeExceptionally(Throwable throwable) {
-        for (Callback callback : callbacks) {
-            callback.completeExceptionally(throwable);
-        }
+    public Collection<Callback> getCallbacks() {
+        return callbacks;
     }
 }

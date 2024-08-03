@@ -3,7 +3,7 @@ package net.techtrends.listeners.input;
 import net.techtrends.exception.MaxBufferSizeExceededException;
 import net.techtrends.listeners.input.operations.ListenData;
 import net.techtrends.listeners.output.AsyncChannelSocket;
-import net.techtrends.listeners.response.Callback;
+import net.techtrends.network.AggregateCallback;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -20,9 +20,10 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
     private final int bufferSize;
 
-    private final Callback callback;
+    private final AggregateCallback callback;
 
-    public InputListener(AsynchronousSocketChannel socketChannel, int bufferSize, Callback callback) {
+
+    public InputListener(AsynchronousSocketChannel socketChannel, int bufferSize, AggregateCallback callback) {
         this.socketChannel = socketChannel;
         this.callback = callback;
         this.bufferSize = bufferSize;
@@ -64,7 +65,6 @@ public class InputListener implements CompletionHandler<Integer, ByteBuffer> {
 
     @Override
     public void failed(Throwable exc, ByteBuffer buffer) {
-        System.out.println(exc.getClass());
         AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
         throw new RuntimeException("Error: " + exc.getMessage(), exc);
     }
