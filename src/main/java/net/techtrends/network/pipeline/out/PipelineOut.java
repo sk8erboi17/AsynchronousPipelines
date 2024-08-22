@@ -1,15 +1,9 @@
 package net.techtrends.network.pipeline.out;
 
-<<<<<<< HEAD
 import net.techtrends.listeners.output.AsyncDataSender;
 import net.techtrends.network.pipeline.out.content.Request;
 
 import java.net.http.HttpClient;
-=======
-import net.techtrends.listeners.output.OutputListener;
-import net.techtrends.network.pipeline.out.content.Request;
-
->>>>>>> c3733fd7991ada3ff017b98fb56adbb52dc8f6f9
 import java.nio.channels.AsynchronousSocketChannel;
 
 /**
@@ -17,39 +11,21 @@ import java.nio.channels.AsynchronousSocketChannel;
  * It utilizes an AsyncDataSender to handle data transmission based on the type of data requested.
  */
 public class PipelineOut {
-<<<<<<< HEAD
     private AsynchronousSocketChannel client;
 
     private boolean allocateDirect;
 
     private int initBuffer;
-=======
-
-    private final AsynchronousSocketChannel client;
-
-    private final boolean allocateDirect;
-
-    private final int initBuffer;
->>>>>>> c3733fd7991ada3ff017b98fb56adbb52dc8f6f9
 
     public PipelineOut(AsynchronousSocketChannel client, boolean allocateDirect, int initBuffer) {
         this.client = client;
         this.allocateDirect = allocateDirect;
         this.initBuffer = initBuffer;
     }
-<<<<<<< HEAD
 
 
     public void handleRequest(Request request) {
         AsyncDataSender asyncDataSender = new AsyncDataSender(client, initBuffer, allocateDirect);
-=======
-    public void registerRequest(Request request) {
-        handleNonHttpRequest(request);
-    }
-
-    private void handleNonHttpRequest(Request request) {
-        OutputListener outputListener = new OutputListener(client, initBuffer, allocateDirect);
->>>>>>> c3733fd7991ada3ff017b98fb56adbb52dc8f6f9
         Object message = request.getMessage();
         switch (message) {
             case String s -> asyncDataSender.sendString(s, request.getCallback());
