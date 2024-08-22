@@ -7,8 +7,20 @@ The **pipeline** is designed to organize and manage asynchronous data flows in n
 
 This methodology facilitates the efficient processing of data streams and asynchronous operations, ensuring applications can scale and adapt to various networking tasks effortlessly. By encapsulating the complexities of asynchronous communication into a structured pipeline, developers can concentrate on the application's core logic while utilizing a robust mechanism for data transmission and processing.
 
-## Building Our First Pipeline!
+### Bidirectional Communication Workflow
+**Server to Client:**
 
+1. **Setup**: The server creates an `AsynchronousServerSocketChannel` to listen for incoming connections using `AsyncInputSocket`.
+2. **Accept Connection**: The `Listener` accepts new client connections asynchronously.
+3. **Send Data**: Once connected, the server uses `AsyncDataSender` to send data to the client. Data is encoded into a `ByteBuffer` with a specific marker, then sent asynchronously to the client's `AsynchronousSocketChannel`.
+
+**Client to Server:**
+
+1. **Connect**: The client creates an `AsynchronousSocketChannel` and connects to the server using `AsyncChannelSocket`.
+2. **Receive Data**: The client reads data from the server using an appropriate `AsyncDataReceiver` implementation.
+3. **Process Data**: The `AsyncDataReceiver` uses `ListenData` to decode the received data based on its marker and invokes the provided `Callback` with the decoded data.
+
+## Building Our First Pipeline!
 
 ### Setting Up Our First Output/Input Socket
 
@@ -32,11 +44,11 @@ private static AsynchronousServerSocketChannel server = AsyncInputSocket.createI
 **`AsyncInputSocket.createInput(...)`**: This method simplifies the creation and initialization of an `AsynchronousServerSocketChannel`, aiming to ease the setup process of the server socket channel.
 
 ```java
-private static void setupIncomingClients() {
-   Listener.getInstance().startConnectionListen(server, client -> {
-       buildPipelinesIn(client);
-       setupOutputForClients(client);
-   });
+    private static void setupIncomeClients() {
+    Listener.getInstance().startConnectionListen(server, client -> {
+        PipeslineIO.buildPipelinesIn(client);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> AsyncChannelSocket.closeChannelSocketChannel(client)));
+    });
 }
 ``` 
 
@@ -50,9 +62,6 @@ private static void setupIncomingClients() {
 
     -   **`buildPipelinesIn(client)`**: Constructs an input pipeline for each connected client, configured to asynchronously receive and process data from the client. The specific configuration and processing logic are encapsulated within the `buildPipelinesIn` method.
 
-    -   **`setupOutputForClients(client)`**: Beyond configuring the input pipeline, it's also essential to establish an output pipeline or a comparable mechanism for sending data back to the client. The `setupOutputForClients` method handles this configuration.
-
-
 We will explore the last two methods in subsequent sections.
 
 ## Constructing Input Pipelines with `PipelineBuilderIn`
@@ -63,15 +72,34 @@ This method configures an input pipeline for asynchronous communication with ext
 
 ```java
 public static void buildPipelinesIn(AsynchronousSocketChannel client) {
-    PipelineIn pipelineIn = new PipelineInBuilder(client)
-            .configureAggregateCallback(
-                    new CallbackBuilder()
-                            .onComplete(object -> System.out.println("Response:" + object))
-                            .onException(Throwable::printStackTrace)
-                            .build())
-            .setBufferSize(4096 * 128)
+    // Create an output pipeline for sending responses back to the client
+    PipelineOut pipelineOut = buildPipelinesOut(client);
+
+    // Define a callback to handle responses and manage exceptions
+    Callback responseCallback = new CallbackBuilder()
+            .onComplete(o -> {
+                System.out.println(o); // Print the response received from the client
+                // Send a response back to the client
+                pipelineOut.handleRequest(new SayHelloToClient("Message from Embedded Server: Hi Client!"));
+            })
+            .onException(Throwable::printStackTrace) // Print stack trace for exceptions
             .build();
+
+    // Configure and initialize the input pipeline
+    new PipelineInBuilder(client)
+            .setBufferSize(4096 * 128) // Set the buffer size for receiving data
+            .configureAggregateCallback(Collections.singletonList(responseCallback)) // Set up callbacks for handling data and exceptions
+            .build(); // Build and initialize the input pipeline
 }
+
+private static PipelineOut buildPipelinesOut(AsynchronousSocketChannel client) {
+    // Configure and create an output pipeline
+    return new PipelineOutBuilder(client)
+            .allocateDirect(true) // Use direct memory for the buffer
+            .setBufferSize(4096 * 20) // Set the buffer size for sending data
+            .buildSocket(); // Build and initialize the output pipeline
+}
+
 ``` 
 
 #### `PipelineInBuilder` Parameters:
@@ -108,6 +136,7 @@ public class SayHelloToEmbeddedServer implements Request {
     }
 }
 ``` 
+
 -   **Constructor**: Accepts a `String message` as input, representing the message intended for the embedded server.
 
 -   **`CallbackBuilder`**: Utilizes a builder pattern for callback configuration, addressing completion and exception scenarios of the request. However, the `onComplete` callback is set to `null`, denoting no specific action upon completion. The `onException` callback is designed to print any exceptions' stack trace, facilitating debugging.

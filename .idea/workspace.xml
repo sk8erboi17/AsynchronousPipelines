@@ -5,17 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66d8af5b-6642-4cbe-9837-0f8b3fd595fe" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipelineClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/example/client/PipeslineIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/client/PipeslineIO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/example/client/request/GetUsersFromWebServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/example/server/PipeslineIO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/example/server/PipeslineIO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/BufferBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/BufferBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/ConnectionRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/ConnectionRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/Listener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/Listener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/ObjectUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/exception/ServerExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/group/PipelineGroupManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/group/PipelineGroupManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/AsyncInputSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/AsyncInputSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/InputListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/operations/ListenData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/input/operations/ListenData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/AsyncChannelSocket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/AsyncChannelSocket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/output/OutputListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/response/Callback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/response/Callback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/response/CallbackBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/response/CallbackBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/response/implementation/SimpleCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/listeners/response/implementation/SimpleCallback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/AggregateCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/AggregateCallback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/in/PipelineIn.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/in/PipelineIn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/in/PipelineInBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/in/PipelineInBuilder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOut.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOut.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/http/Http.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/http/HttpBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/http/HttpFormatter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOutBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/PipelineOutBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/techtrends/network/pipeline/out/content/Request.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +48,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -48,6 +66,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.MITMServer.executor": "Run",
+    "Application.MitmProxyServer.executor": "Run",
     "Application.PipelineClient.executor": "Run",
     "Application.PipelineServer.executor": "Run",
     "Application.ProtocolServer.executor": "Run",
@@ -65,10 +85,10 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Peppe/Desktop/Project Github",
+    "last_opened_file_path": "C:/Users/gochi/Desktop/develop/AsynchronousPipelines/src/main/java",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -82,9 +102,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="example.utils" />
       <recent name="net.techtrends" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\gochi\Desktop\develop\AsynchronousPipelines\src\main\java" />
       <recent name="C:\Users\Giuseppe\Desktop\AsynchronousServerClientLib\src\main\java\example" />
       <recent name="C:\Users\Giuseppe\Desktop\AsynchronousServerClientLib\src\main\java\net\techtrends\network\in\request" />
       <recent name="C:\Users\Giuseppe\Desktop\AsynchronousServerClientLib\src\main\java\net\techtrends\network\in" />
@@ -97,29 +119,17 @@
       <recent name="net.techtrends.network.out.response" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.example.server.PipelineServer">
-    <configuration name="PipelineClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="example.protocol.PipelineClient" />
-      <module name="AsynchronousServerClientLib" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="example.protocol.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+  <component name="RunManager">
+    <configuration name="MITMServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MITMServer" />
+      <module name="AsynchronousPipelines" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PipelineServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="example.protocol.PipelineServer" />
-      <module name="AsynchronousServerClientLib" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="example.protocol.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+    <configuration name="MitmProxyServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MitmProxyServer" />
+      <module name="AsynchronousPipelines" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -165,18 +175,19 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MITMServer" />
         <item itemvalue="Application.example.client.PipelineClient" />
         <item itemvalue="Application.example.server.PipelineServer" />
+        <item itemvalue="Application.MitmProxyServer" />
         <item itemvalue="Application.ServerApplication" />
-        <item itemvalue="Application.PipelineClient" />
-        <item itemvalue="Application.PipelineServer" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.2-azul-21.0.2-4caba194b151-38275579" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.15989.150" />
+        <option value="bundled-js-predefined-1d06a55b98c1-91d5c284f522-JavaScript-IU-241.15989.150" />
       </set>
     </attachedChunks>
   </component>
@@ -198,6 +209,14 @@
       <workItem from="1710266121302" duration="32821000" />
       <workItem from="1710398080314" duration="14483000" />
       <workItem from="1712095925669" duration="230000" />
+      <workItem from="1716395051739" duration="4559000" />
+      <workItem from="1716402820665" duration="4230000" />
+      <workItem from="1716410161612" duration="972000" />
+      <workItem from="1716411315612" duration="2316000" />
+      <workItem from="1716443992610" duration="9000" />
+      <workItem from="1716445380480" duration="777000" />
+      <workItem from="1716446196627" duration="608000" />
+      <workItem from="1724355907650" duration="2941000" />
     </task>
     <servers />
   </component>

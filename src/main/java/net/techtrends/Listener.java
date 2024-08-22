@@ -7,6 +7,10 @@ import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * The Listener class is designed to handle incoming client connections to a server.
+ * It utilizes asynchronous I/O provided by Java NIO to accept new connections and manage them using a callback mechanism.
+ */
 public class Listener {
     private static final Listener instanceListener = new Listener();
     private final ExecutorService executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2);
@@ -16,6 +20,7 @@ public class Listener {
     }
 
     public void startConnectionListen(AsynchronousServerSocketChannel serverSocketChannel, ConnectionRequest connectionRequest) {
+        // Executes the asynchronous accept method on a separate thread
         executors.execute(() -> serverSocketChannel.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
             @Override
             public void completed(AsynchronousSocketChannel socketChannel, Void attachment) {

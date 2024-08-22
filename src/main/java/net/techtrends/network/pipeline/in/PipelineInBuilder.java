@@ -6,6 +6,11 @@ import net.techtrends.network.AggregateCallback;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.List;
 
+/**
+ * The PipelineInBuilder class is a builder class for constructing a PipelineIn object.
+ * It provides a flexible and fluent API for setting various configurations required to create a PipelineIn instance,
+ * including buffer size, direct buffer allocation, and callbacks.
+ */
 public class PipelineInBuilder {
 
     private final AsynchronousSocketChannel client;
@@ -33,8 +38,7 @@ public class PipelineInBuilder {
     }
 
     public PipelineIn build() {
-        PipelineIn pipeline = new PipelineIn(client, allocateDirect, bufferSize, aggregateCallback);
-        return pipeline;
+        return new PipelineIn(client, allocateDirect, bufferSize, aggregateCallback);
     }
 
 }
