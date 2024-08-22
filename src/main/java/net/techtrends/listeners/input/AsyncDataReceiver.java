@@ -3,7 +3,7 @@ package net.techtrends.listeners.input;
 import net.techtrends.exception.MaxBufferSizeExceededException;
 import net.techtrends.listeners.input.operations.ListenData;
 import net.techtrends.listeners.output.AsyncChannelSocket;
-import net.techtrends.listeners.response.Callback;
+import net.techtrends.network.AggregateCallback;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -22,9 +22,17 @@ public class AsyncDataReceiver implements CompletionHandler<Integer, ByteBuffer>
     private final ListenData processData;
     private final AsynchronousSocketChannel socketChannel;
     private final int bufferSize;
+<<<<<<< HEAD:src/main/java/net/techtrends/listeners/input/AsyncDataReceiver.java
     private final Callback callback;
 
     public AsyncDataReceiver(AsynchronousSocketChannel socketChannel, int bufferSize, Callback callback) {
+=======
+
+    private final AggregateCallback callback;
+
+
+    public InputListener(AsynchronousSocketChannel socketChannel, int bufferSize, AggregateCallback callback) {
+>>>>>>> c3733fd7991ada3ff017b98fb56adbb52dc8f6f9:src/main/java/net/techtrends/listeners/input/InputListener.java
         this.socketChannel = socketChannel;
         this.callback = callback;
         this.bufferSize = bufferSize;
@@ -72,8 +80,11 @@ public class AsyncDataReceiver implements CompletionHandler<Integer, ByteBuffer>
 
     @Override
     public void failed(Throwable exc, ByteBuffer buffer) {
+<<<<<<< HEAD:src/main/java/net/techtrends/listeners/input/AsyncDataReceiver.java
         // This method is called if the read operation fails
         System.out.println(exc.getClass());
+=======
+>>>>>>> c3733fd7991ada3ff017b98fb56adbb52dc8f6f9:src/main/java/net/techtrends/listeners/input/InputListener.java
         AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
         throw new RuntimeException("Error: " + exc.getMessage(), exc);
     }

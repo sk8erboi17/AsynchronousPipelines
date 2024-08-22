@@ -27,8 +27,7 @@ public class PipelineOutBuilder {
     }
 
     public PipelineOut buildSocket() {
-        PipelineOut pipelineOut = new PipelineOut(client, allocateDirect, bufferSize);
-        return pipelineOut;
+        return new PipelineOut(client, allocateDirect, bufferSize);
     }
 
 }

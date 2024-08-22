@@ -63,6 +63,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -98,8 +99,43 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
+=======
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.PipelineClient.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PipelineServer.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ProtocolServer.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Server.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TestClientMultiThread.executor&quot;: &quot;Run&quot;,
+    &quot;Application.TestClientSingleThread.executor&quot;: &quot;Run&quot;,
+    &quot;Application.example.client.PipelineClient.executor&quot;: &quot;Run&quot;,
+    &quot;Application.example.server.PipelineServer.executor&quot;: &quot;Run&quot;,
+    &quot;Attach to process.pid 66056.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;Maven.AsynchronousPipelines [clean,validate...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AsynchronousPipelines [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AsynchronousServerClientLib [clean...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AsynchronousServerClientLib [clean].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Peppe/Desktop/Project Github&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+>>>>>>> c3733fd7991ada3ff017b98fb56adbb52dc8f6f9
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="example.utils" />
@@ -175,10 +211,15 @@
     </configuration>
     <recent_temporary>
       <list>
+<<<<<<< HEAD
         <item itemvalue="Application.MITMServer" />
         <item itemvalue="Application.example.client.PipelineClient" />
         <item itemvalue="Application.example.server.PipelineServer" />
         <item itemvalue="Application.MitmProxyServer" />
+=======
+        <item itemvalue="Application.example.server.PipelineServer" />
+        <item itemvalue="Application.example.client.PipelineClient" />
+>>>>>>> c3733fd7991ada3ff017b98fb56adbb52dc8f6f9
         <item itemvalue="Application.ServerApplication" />
       </list>
     </recent_temporary>

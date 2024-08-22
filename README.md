@@ -54,7 +54,7 @@ private static AsynchronousServerSocketChannel server = AsyncInputSocket.createI
 
 -   **`setupIncomingClients`**: This function is tasked with initializing the server's capability to accept and manage incoming client connections.
 
--   **`Listener.getInstance()`**: Utilizes a singleton pattern for the `Listener` class, which is presumably responsible for network communication, specifically monitoring incoming connections on a server socket.
+-   **`Listener.getInstance()`**: Utilizes a singleton pattern for the `Listener` class, which is responsible for network communication, specifically monitoring incoming connections on a server socket.
 
 -   **`startConnectionListen(server, client -> {...})`**: Initiates the listening process on the specified `server`. The `server` object, while not explicitly defined, is assumed to represent the server's socket or a similar networking entity. The method employs a lambda function as its second argument, executed for each incoming client connection. This function receives a `client` parameter, denoting the connected client.
 
