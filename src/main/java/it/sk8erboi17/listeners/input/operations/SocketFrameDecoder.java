@@ -192,7 +192,23 @@ public class SocketFrameDecoder {
             try {
                 // Create optimized payload buffer with minimal copying
                 ByteBuffer payloadBuffer = createPayloadBuffer(buffer, arrayBuffer, arrayOffset, contentStart, payloadLength);
-                listenDataProcessor.listen(START_MARKER, payloadBuffer, callback);
+                // The first byte of the extracted payload is the DATA_TYPE_MARKER
+                if (payloadBuffer.remaining() < 1) {
+                    logError("Decoded frame is missing the data type marker.", channel);
+                    position = endPos + 1; // Skip this malformed frame
+                    continue;
+                }
+                byte dataTypeMarker = payloadBuffer.get();
+
+                if(dataTypeMarker == END_MARKER) {
+                    continue; // malformed
+                }
+                if(dataTypeMarker !=  START_MARKER) {
+                    continue; // malformed
+                }
+
+
+                listenDataProcessor.listen(dataTypeMarker, payloadBuffer, callback);
             } catch (Exception e) {
                 logError("Error processing decoded frame: " + e.getMessage(), channel);
                 if (LOGGER.isLoggable(Level.FINE)) {
