@@ -17,11 +17,11 @@ public class PipeslineIO {
     ///EMBEDDED SERVER REQUEST HERE
     public static void buildPipelinesSocketOut(AsynchronousSocketChannel client) {
         PipelineOut pipelineOut = new PipelineOutBuilder(client).allocateDirect(true).setBufferSize(4096).buildSocket();
-        pipelineOut.handleRequest(new SayHelloToEmbeddedServer("Message from Client: Hi Embedded Server!"));
+        pipelineOut.handleRequest(new SayHelloToEmbeddedServer("Message from Client: Hi Embedded Server!\n"));
 
         Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
-            pipelineOut.handleRequest(new SayHelloToEmbeddedServer("Message from Client: Hi Embedded Server!"));
-        }, 1, 1, TimeUnit.NANOSECONDS);
+            pipelineOut.handleRequest(new SayHelloToEmbeddedServer("Message from Client: Hi Embedded Server!\n"));
+        }, 1, 1, TimeUnit.MILLISECONDS);
 
     }
 

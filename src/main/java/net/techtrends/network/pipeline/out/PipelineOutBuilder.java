@@ -10,6 +10,8 @@ public class PipelineOutBuilder {
 
     private final AsynchronousSocketChannel client;
     private boolean allocateDirect = false;
+    private boolean performResizing = false;
+
     private int bufferSize = 1024;
 
     public PipelineOutBuilder(AsynchronousSocketChannel client) {
@@ -26,8 +28,13 @@ public class PipelineOutBuilder {
         return this;
     }
 
+    public PipelineOutBuilder setPerformResizing(boolean performResizing) {
+        this.performResizing = performResizing;
+        return this;
+    }
+
     public PipelineOut buildSocket() {
-        return new PipelineOut(client, allocateDirect, bufferSize);
+        return new PipelineOut(client, allocateDirect, bufferSize,performResizing);
     }
 
 }

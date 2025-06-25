@@ -2,8 +2,10 @@ package net.techtrends.listeners.input.operations;
 
 import net.techtrends.listeners.response.Callback;
 
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 /**
  * The ListenData class is responsible for processing data read from a ByteBuffer.
@@ -12,14 +14,13 @@ import java.nio.charset.StandardCharsets;
  */
 public class ListenData {
 
-    public void listen(ByteBuffer buffer, Callback callback) {
+
+    public void listen(byte marker,ByteBuffer buffer, Callback callback) {
         // If the buffer has no remaining bytes, return immediately
         if (buffer.remaining() <= 0) {
             return;
         }
 
-        // Read the first byte to determine the type of data in the buffer
-        byte marker = buffer.get();
 
         // Depending on the marker, process the buffer accordingly
         if (marker >= 0x01 && marker <= 0x06) {
@@ -34,8 +35,6 @@ public class ListenData {
         } else {
             // If the marker is out of the expected range, attempt to decode the buffer as a string and log an error
             try {
-                String data = StandardCharsets.UTF_8.decode(buffer).toString();
-                System.err.println("Error to string: " + data);
                 throw new RuntimeException("Error with buffer, do you have enough space?");
             } catch (ClassCastException e) {
                 throw new RuntimeException("Error with buffer, do you have enough space?" + e.getMessage(), e);

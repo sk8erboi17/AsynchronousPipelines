@@ -12,13 +12,13 @@ This methodology facilitates the efficient processing of data streams and asynch
 
 1. **Setup**: The server creates an `AsynchronousServerSocketChannel` to listen for incoming connections using `AsyncInputSocket`.
 2. **Accept Connection**: The `Listener` accepts new client connections asynchronously.
-3. **Send Data**: Once connected, the server uses `AsyncDataSender` to send data to the client. Data is encoded into a `ByteBuffer` with a specific marker, then sent asynchronously to the client's `AsynchronousSocketChannel`.
+3. **Send Data**: Once connected, the server uses `DataEndoder` to send data to the client. Data is encoded into a `ByteBuffer` with a specific marker, then sent asynchronously to the client's `AsynchronousSocketChannel`.
 
 **Client to Server:**
 
 1. **Connect**: The client creates an `AsynchronousSocketChannel` and connects to the server using `AsyncChannelSocket`.
-2. **Receive Data**: The client reads data from the server using an appropriate `AsyncDataReceiver` implementation.
-3. **Process Data**: The `AsyncDataReceiver` uses `ListenData` to decode the received data based on its marker and invokes the provided `Callback` with the decoded data.
+2. **Receive Data**: The client reads data from the server using an appropriate `DataDecoder` implementation.
+3. **Process Data**: The `DataDecoder` uses `ListenData` to decode the received data based on its marker and invokes the provided `Callback` with the decoded data.
 
 ## Building Our First Pipeline!
 

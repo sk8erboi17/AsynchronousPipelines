@@ -14,11 +14,11 @@ import java.util.concurrent.ExecutionException;
  *  It uses PipelineGroupManager to manage the underlying channel group, which can help in efficiently handling multiple concurrent connections.
  */
 public class AsyncChannelSocket {
+    private static final PipelineGroupManager pipelineGroupManager = new PipelineGroupManager(Runtime.getRuntime().availableProcessors() / 2);
 
     // Static method to create an AsynchronousSocketChannel and connect it to the given InetSocketAddress.
     public static AsynchronousSocketChannel createChannel(InetSocketAddress inetSocketAddress) {
         // Create a PipelineGroupManager with a thread pool size equal to half the available processors.
-        PipelineGroupManager pipelineGroupManager = new PipelineGroupManager(Runtime.getRuntime().availableProcessors() / 2);
         AsynchronousSocketChannel socketChannel;
 
         try {
@@ -44,4 +44,15 @@ public class AsyncChannelSocket {
             }
         }
     }
+
+
+    /**
+     * Shuts down the underlying static PipelineGroupManager, releasing all associated resources.
+     * This method MUST be called once when the entire application using AsyncChannelSocket is shutting down,
+     * not when individual channels are closed.
+     */
+    public static void shutdown() {
+        pipelineGroupManager.shutdown();
+    }
+
 }
