@@ -1,8 +1,8 @@
 package example.client.request;
 
-import net.techtrends.listeners.response.Callback;
-import net.techtrends.listeners.response.CallbackBuilder;
-import net.techtrends.network.pipeline.out.content.Request;
+import it.sk8erboi17.listeners.response.Callback;
+import it.sk8erboi17.listeners.response.CallbackBuilder;
+import it.sk8erboi17.network.pipeline.out.content.Request;
 
 public class SayHelloToEmbeddedServer implements Request {
     private final String message;

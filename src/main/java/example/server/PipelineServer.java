@@ -1,8 +1,8 @@
 package example.server;
 
-import net.techtrends.Listener;
-import net.techtrends.listeners.input.AsyncInputSocket;
-import net.techtrends.listeners.output.AsyncChannelSocket;
+import it.sk8erboi17.Listener;
+import it.sk8erboi17.listeners.input.AsyncInputSocket;
+import it.sk8erboi17.listeners.output.AsyncChannelSocket;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

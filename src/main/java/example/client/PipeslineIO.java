@@ -3,9 +3,9 @@ package example.client;
 
 import example.client.request.SayHelloToEmbeddedServer;
 import example.client.response.ResponseManager;
-import net.techtrends.network.pipeline.in.PipelineInBuilder;
-import net.techtrends.network.pipeline.out.PipelineOut;
-import net.techtrends.network.pipeline.out.PipelineOutBuilder;
+import it.sk8erboi17.network.pipeline.in.PipelineInBuilder;
+import it.sk8erboi17.network.pipeline.out.PipelineOut;
+import it.sk8erboi17.network.pipeline.out.PipelineOutBuilder;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Collections;
 import java.util.concurrent.Executors;

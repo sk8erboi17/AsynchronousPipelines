@@ -1,7 +1,7 @@
 package example.client.response;
 
-import net.techtrends.listeners.response.Callback;
-import net.techtrends.listeners.response.CallbackBuilder;
+import it.sk8erboi17.listeners.response.Callback;
+import it.sk8erboi17.listeners.response.CallbackBuilder;
 
 public class ResponseManager {
     public static final Callback responseToServer = new CallbackBuilder()

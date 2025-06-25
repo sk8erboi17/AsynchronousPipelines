@@ -1,6 +1,6 @@
 package example.client;
 
-import net.techtrends.listeners.output.AsyncChannelSocket;
+import it.sk8erboi17.listeners.output.AsyncChannelSocket;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;

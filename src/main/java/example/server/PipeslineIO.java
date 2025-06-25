@@ -1,11 +1,11 @@
 package example.server;
 
 import example.server.request.SayHelloToClient;
-import net.techtrends.listeners.response.Callback;
-import net.techtrends.listeners.response.CallbackBuilder;
-import net.techtrends.network.pipeline.in.PipelineInBuilder;
-import net.techtrends.network.pipeline.out.PipelineOut;
-import net.techtrends.network.pipeline.out.PipelineOutBuilder;
+import it.sk8erboi17.listeners.response.Callback;
+import it.sk8erboi17.listeners.response.CallbackBuilder;
+import it.sk8erboi17.network.pipeline.in.PipelineInBuilder;
+import it.sk8erboi17.network.pipeline.out.PipelineOut;
+import it.sk8erboi17.network.pipeline.out.PipelineOutBuilder;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Collections;
