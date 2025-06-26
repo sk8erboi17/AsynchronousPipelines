@@ -3,6 +3,7 @@ package it.sk8erboi17.network.pipeline.out;
 import it.sk8erboi17.listeners.output.DataEndoder;
 import it.sk8erboi17.network.pipeline.out.content.Request;
 
+import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;
 
 /**
@@ -10,13 +11,12 @@ import java.nio.channels.AsynchronousSocketChannel;
  * It utilizes an DataEndoder to handle data transmission based on the type of data requested.
  */
 public class PipelineOut {
-    private final AsynchronousSocketChannel client;
+    private AsynchronousSocketChannel client;
+    private boolean allocateDirect;
+    private int initBuffer;
+    private boolean performResizing;
+    private DataEndoder dataEncoder;
 
-    private final boolean allocateDirect;
-
-    private final int initBuffer;
-
-    private final boolean performResizing;
     public PipelineOut(AsynchronousSocketChannel client, boolean allocateDirect, int initBuffer, boolean performResizing) {
         this.client = client;
         this.allocateDirect = allocateDirect;
@@ -26,17 +26,38 @@ public class PipelineOut {
 
 
     public void handleRequest(Request request) {
-        DataEndoder DataEndoder = new DataEndoder(client, initBuffer, allocateDirect,performResizing);
+        dataEncoder = new DataEndoder(client, initBuffer, allocateDirect,performResizing);
         Object message = request.getMessage();
         switch (message) {
-            case String s -> DataEndoder.sendString(s, request.getCallback());
-            case Integer i -> DataEndoder.sendInt(i, request.getCallback());
-            case Float v -> DataEndoder.sendFloat(v, request.getCallback());
-            case Double v -> DataEndoder.sendDouble(v, request.getCallback());
-            case Character c -> DataEndoder.sendChar(c, request.getCallback());
-            case byte[] bytes -> DataEndoder.sendByteArray(bytes, request.getCallback());
+            case String s -> dataEncoder.sendString(s, request.getCallback());
+            case Integer i -> dataEncoder.sendInt(i, request.getCallback());
+            case Float v -> dataEncoder.sendFloat(v, request.getCallback());
+            case Double v -> dataEncoder.sendDouble(v, request.getCallback());
+            case Character c -> dataEncoder.sendChar(c, request.getCallback());
+            case byte[] bytes -> dataEncoder.sendByteArray(bytes, request.getCallback());
             case null, default -> System.err.println("Unsupported message type: " + message.getClass().getSimpleName());
         }
+    }
+
+    public void setClient(AsynchronousSocketChannel newClient) {
+        if (this.client != null && this.client.isOpen() && this.client != newClient) {
+            try {
+                this.client.close(); // old connection
+            } catch (IOException e) {
+                System.err.println("Error with close: " + e.getMessage());
+            }
+        }
+        this.client = newClient;
+        if (this.client != null && this.client.isOpen()) {
+            this.dataEncoder = new DataEndoder(this.client, initBuffer, allocateDirect, performResizing); // new encoder
+        } else {
+            this.dataEncoder = null;
+        }
+    }
+
+
+    public AsynchronousSocketChannel getClient() {
+        return client;
     }
 
 }

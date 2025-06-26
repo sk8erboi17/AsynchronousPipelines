@@ -198,19 +198,11 @@ public class SocketFrameDecoder {
                     position = endPos + 1; // Skip this malformed frame
                     continue;
                 }
-                byte dataTypeMarker = payloadBuffer.get();
 
-                if(dataTypeMarker == END_MARKER) {
-                    continue; // malformed
-                }
-                if(dataTypeMarker !=  START_MARKER) {
-                    continue; // malformed
-                }
-
-
-                listenDataProcessor.listen(dataTypeMarker, payloadBuffer, callback);
+                listenDataProcessor.listen(START_MARKER, payloadBuffer, callback);
             } catch (Exception e) {
                 logError("Error processing decoded frame: " + e.getMessage(), channel);
+                e.printStackTrace();
                 if (LOGGER.isLoggable(Level.FINE)) {
                     LOGGER.log(Level.FINE, "Frame processing error", e);
                 }
