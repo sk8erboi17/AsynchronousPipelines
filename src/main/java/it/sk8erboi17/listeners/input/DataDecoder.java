@@ -22,19 +22,17 @@ public class DataDecoder implements CompletionHandler<Integer, ByteBuffer> {
     private final ExecutorService readThread;
     private final ListenData processData;
     private final AsynchronousSocketChannel socketChannel;
-    private final int bufferSize;
     private final Callback callback;
-    private final SocketFrameDecoder frameDecoder; // <-- 2. Nuova istanza del frame decoder
+    private final SocketFrameDecoder frameDecoder;
 
-    public DataDecoder(AsynchronousSocketChannel socketChannel, int bufferSize, Callback callback) {
+    public DataDecoder(AsynchronousSocketChannel socketChannel, int frameLength, Callback callback, ExecutorService sharedThreadPool) {
         this.socketChannel = socketChannel;
         this.callback = callback;
-        this.bufferSize = bufferSize;
-        this.readThread = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() / 2);
+        this.readThread = sharedThreadPool;
         this.processData = new ListenData();
         this.frameDecoder = new SocketFrameDecoder(
-                bufferSize / 2,
-                bufferSize,
+                frameLength / 2,
+                frameLength,
                 this.processData
         );
     }

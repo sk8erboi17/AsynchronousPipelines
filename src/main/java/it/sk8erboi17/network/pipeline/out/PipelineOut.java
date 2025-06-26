@@ -1,6 +1,6 @@
 package it.sk8erboi17.network.pipeline.out;
 
-import it.sk8erboi17.listeners.output.DataEndoder;
+import it.sk8erboi17.listeners.output.DataEncoder;
 import it.sk8erboi17.network.pipeline.out.content.Request;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class PipelineOut {
     private boolean allocateDirect;
     private int initBuffer;
     private boolean performResizing;
-    private DataEndoder dataEncoder;
+    private DataEncoder dataEncoder;
 
     public PipelineOut(AsynchronousSocketChannel client, boolean allocateDirect, int initBuffer, boolean performResizing) {
         this.client = client;
@@ -26,7 +26,7 @@ public class PipelineOut {
 
 
     public void handleRequest(Request request) {
-        dataEncoder = new DataEndoder(client, initBuffer, allocateDirect,performResizing);
+        dataEncoder = new DataEncoder(client, initBuffer, allocateDirect, performResizing);
         Object message = request.getMessage();
         switch (message) {
             case String s -> dataEncoder.sendString(s, request.getCallback());
@@ -49,7 +49,7 @@ public class PipelineOut {
         }
         this.client = newClient;
         if (this.client != null && this.client.isOpen()) {
-            this.dataEncoder = new DataEndoder(this.client, initBuffer, allocateDirect, performResizing); // new encoder
+            this.dataEncoder = new DataEncoder(this.client, initBuffer, allocateDirect, performResizing); // new encoder
         } else {
             this.dataEncoder = null;
         }

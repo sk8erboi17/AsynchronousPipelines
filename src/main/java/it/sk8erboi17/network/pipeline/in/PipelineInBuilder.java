@@ -15,7 +15,7 @@ public class PipelineInBuilder {
 
     private final AsynchronousSocketChannel client;
     private boolean allocateDirect = false;
-    private int bufferSize = 4096;
+    private int bufferSize = 8196;
     private AggregateCallback aggregateCallback;
 
     public PipelineInBuilder(AsynchronousSocketChannel client) {
