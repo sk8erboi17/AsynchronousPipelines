@@ -12,6 +12,9 @@ public class BufferBuilder {
 
     // Sets the initial size for the ByteBuffer and returns the builder instance.
     public BufferBuilder setInitSize(int initSize) {
+        if(initSize < 0){
+            throw new IllegalArgumentException("Size must be greather tha 0");
+        }
         this.initialSize = initSize;
         return this;
     }

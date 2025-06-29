@@ -2,6 +2,8 @@ package it.sk8erboi17.listeners.output;
 
 import it.sk8erboi17.exception.MaxBufferSizeExceededException;
 import it.sk8erboi17.listeners.response.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -14,9 +16,11 @@ import java.nio.charset.StandardCharsets;
  * It provides methods to send various types of data (e.g., integers, strings, floats, doubles, chars, byte arrays) over the AsynchronousSocketChannel.
  * Data is encoded into a ByteBuffer using a length-prefixed protocol and then sent asynchronously.
  */
+//TODO HANDLE QUEUE OF
 public class DataEncoder implements CompletionHandler<Integer, Callback> {
 
     private static final byte START_MARKER = 0x01;
+    private static final Logger log = LoggerFactory.getLogger(DataEncoder.class);
 
     private final AsynchronousSocketChannel socketChannel;
     private ByteBuffer outputBuffer;
@@ -103,12 +107,14 @@ public class DataEncoder implements CompletionHandler<Integer, Callback> {
 
     private void prepareByteBuffer(int dataSize) {
         /*
-        FIND A BETTER SOLUTION
+        //TODO: Implement packet frammentation
+
         if (dataSize > MAX_BUFFER_SIZE) {
          failed(new MaxBufferSizeExceededException("Requested data size " + dataSize + " exceeds max limit " + MAX_BUFFER_SIZE), currentCallback);
          return;
-    }
+        }
          */
+
         if (dataSize > outputBuffer.capacity()) {
             if (!performResizing) {
                 try {
@@ -117,9 +123,11 @@ public class DataEncoder implements CompletionHandler<Integer, Callback> {
                     if (currentCallback != null) {
                         currentCallback.completeExceptionally(e);
                     }
-                    throw new RuntimeException(e); // TODO BETER HANDLER
+                    log.error("Error during preparing buffer: {}", e.getMessage());
                 }
             } else {
+                /*
+                //TODO HANDLE http://cwe.mitre.org/data/definitions/770.html
                 int newSize = Math.max(outputBuffer.capacity() * 2, dataSize);
                 ByteBuffer newBuffer;
                 if (allocateDirect) {
@@ -128,12 +136,16 @@ public class DataEncoder implements CompletionHandler<Integer, Callback> {
                     newBuffer = ByteBuffer.allocate(newSize);
                 }
                 outputBuffer = newBuffer;
+                 */
             }
+
         }
     }
 
     private void performSend(Callback callback) {
+
         if (!socketChannel.isOpen()) {
+            //TODO: HANDLE GRACEFULLY CLOSE CLIENT IMPLEMENT AUTHENTICATION BEETWEEN CLIENT AND SERVER
             if (callback != null) {
                 callback.completeExceptionally(new java.nio.channels.ClosedChannelException());
             }
@@ -162,7 +174,7 @@ public class DataEncoder implements CompletionHandler<Integer, Callback> {
 
     @Override
     public void failed(Throwable exc, Callback attachmentCallback) {
-        System.err.println("Error while sending data: " + exc.getMessage());
+        log.error("Error while sending data: {}", exc.getMessage());
         AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
         if (attachmentCallback != null) {
             attachmentCallback.completeExceptionally(exc);

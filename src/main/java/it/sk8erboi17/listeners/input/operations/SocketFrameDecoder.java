@@ -1,5 +1,6 @@
 package it.sk8erboi17.listeners.input.operations;
 
+import it.sk8erboi17.exception.MaxFrameLengthExceededException;
 import it.sk8erboi17.listeners.response.Callback;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class SocketFrameDecoder {
     }
 
     private void processFrames(AsynchronousSocketChannel channel, ByteBuffer buffer, Callback callback) {
-        while (true) {
+        while (true) { // TODO IMPLEMENT TIMEOUT
             if (!findAndSkipToStartMarker(buffer)) {
                 //if there is no marker, stop checking
                 return;
@@ -104,6 +105,8 @@ public class SocketFrameDecoder {
 
     private boolean findAndSkipToStartMarker(ByteBuffer buffer) {
         while (buffer.hasRemaining()) {
+            //TODO IMPLEMENT IF MARKER IS NOT FOUND WITHIN A CERTAIN RANGE CLOSE SKIP see https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string-search_algorithm
+            // CVE: https://cwe.mitre.org/data/definitions/789.html
             if (buffer.get() == START_MARKER) {
                 return true;
             }
@@ -115,7 +118,7 @@ public class SocketFrameDecoder {
         if (clientBuffer.remaining() < newBytes.remaining()) {
             int newSize = Math.max(clientBuffer.capacity() * 2, clientBuffer.position() + newBytes.remaining());
             if (newSize > maxFrameLength) {
-                throw new RuntimeException("Buffer cannot grow beyond maxFrameLength");
+                throw new MaxFrameLengthExceededException("Buffer cannot grow beyond maxFrameLength");
             }
             ByteBuffer newBuffer = ByteBuffer.allocate(newSize);
             clientBuffer.flip();

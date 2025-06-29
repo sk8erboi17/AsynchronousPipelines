@@ -15,7 +15,10 @@ public class PipelineClient {
         setupInput();
 
         // Add a shutdown hook to close the socket channel when the application terminates
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> AsyncChannelSocket.closeChannelSocketChannel(socketChannel)));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
+            AsyncChannelSocket.shutdown();
+        }));
     }
 
     // Sets up the output pipeline for sending data to the server

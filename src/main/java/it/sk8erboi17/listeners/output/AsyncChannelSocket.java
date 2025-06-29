@@ -1,6 +1,8 @@
 package it.sk8erboi17.listeners.output;
 
 import it.sk8erboi17.listeners.group.PipelineGroupManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,6 +17,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class AsyncChannelSocket {
     private static final PipelineGroupManager pipelineGroupManager = new PipelineGroupManager(Runtime.getRuntime().availableProcessors() / 2);
+    private static final Logger log = LoggerFactory.getLogger(AsyncChannelSocket.class);
 
     // Static method to create an AsynchronousSocketChannel and connect it to the given InetSocketAddress.
     public static AsynchronousSocketChannel createChannel(InetSocketAddress inetSocketAddress) {

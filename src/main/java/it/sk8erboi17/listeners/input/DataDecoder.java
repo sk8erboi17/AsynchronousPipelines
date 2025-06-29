@@ -4,6 +4,8 @@ import it.sk8erboi17.listeners.input.operations.ListenData;
 import it.sk8erboi17.listeners.input.operations.SocketFrameDecoder;
 import it.sk8erboi17.listeners.output.AsyncChannelSocket;
 import it.sk8erboi17.listeners.response.Callback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,6 +21,7 @@ import java.util.concurrent.Executors;
 
 public class DataDecoder implements CompletionHandler<Integer, ByteBuffer> {
 
+    private static final Logger log = LoggerFactory.getLogger(DataDecoder.class);
     private final ExecutorService readThread;
     private final ListenData processData;
     private final AsynchronousSocketChannel socketChannel;
@@ -42,11 +45,12 @@ public class DataDecoder implements CompletionHandler<Integer, ByteBuffer> {
 
         if (bytesRead == -1) { // -1 client is closed
             try {
-                System.out.println("Client disconnected gracefully: " + socketChannel.getRemoteAddress());
+                frameDecoder.onClientDisconnected(socketChannel);
+                log.info("Client disconnected gracefully: " + socketChannel.getRemoteAddress());
             } catch (IOException e) {
-                throw new RuntimeException(e); // TODO HANDLE
+                throw new RuntimeException("Error while closing channel :" + e.getMessage(), e);
             }
-            frameDecoder.onClientDisconnected(socketChannel);
+            //kill channel
             AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
             return;
         }
@@ -77,23 +81,21 @@ public class DataDecoder implements CompletionHandler<Integer, ByteBuffer> {
                 clientAddress = socketChannel.getRemoteAddress().toString();
             }
         } catch (IOException e) {
-            // Non riusciamo nemmeno a ottenere l'indirizzo remoto, probabile disconnessione grave
+            log.info("Error unknown client: {} ", exc.getMessage(), exc);
         }
 
         // `exc` ti dirà il motivo del fallimento.
         // Alcuni tipi comuni di eccezioni per disconnessioni/errori:
         if (exc instanceof java.nio.channels.AsynchronousCloseException) {
-            System.out.println("Client " + clientAddress + " channel closed asynchronously during operation: " + exc.getMessage());
+            log.info("Client " + clientAddress + " channel closed asynchronously during operation: " + exc.getMessage());
         } else if (exc instanceof java.nio.channels.ClosedChannelException) {
-            System.out.println("Client " + clientAddress + " channel already closed: " + exc.getMessage());
+            log.info("Client " + clientAddress + " channel already closed: " + exc.getMessage());
         } else {
-            System.err.println("Unexpected error for client " + clientAddress + ": " + exc.getClass().getName() + " - " + exc.getMessage());
+            log.error("Unexpected error for client " + clientAddress + ": " + exc.getClass().getName() + " - " + exc.getMessage());
         }
 
         // channel is broken
-        if (socketChannel.isOpen()) {
-            AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
-        }
+        AsyncChannelSocket.closeChannelSocketChannel(socketChannel);
 
     }
 }

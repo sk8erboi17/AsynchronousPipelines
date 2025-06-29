@@ -1,5 +1,8 @@
 package it.sk8erboi17.listeners.group;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousChannelGroup;
@@ -11,19 +14,21 @@ import java.util.concurrent.TimeUnit;
 
 public class PipelineGroupManager {
 
+    private static final Logger log = LoggerFactory.getLogger(PipelineGroupManager.class);
     // Manages a group of asynchronous channels, sharing a thread pool.
-    private final AsynchronousChannelGroup channelGroup;
-    private final ExecutorService executorService;
+    private AsynchronousChannelGroup channelGroup;
+    private ExecutorService executorService;
 
-    public PipelineGroupManager(int numThreads) {
+    public PipelineGroupManager(int numThreads)  {
         try {
             executorService = Executors.newFixedThreadPool(numThreads);
             // Initialize the AsynchronousChannelGroup with the thread pool.
             channelGroup = AsynchronousChannelGroup.withThreadPool(executorService);
         } catch (IOException e) {
-            throw new RuntimeException("Unable to create AsynchronousChannelGroup", e);
+            log.error("Error with the pipeline group manager :  {}" , e.getMessage() , e);
         }
     }
+
 
     // Creates a new AsynchronousSocketChannel and connects it to the given address.
     public AsynchronousSocketChannel createChannel(InetSocketAddress address) throws IOException, InterruptedException, ExecutionException {
@@ -44,14 +49,15 @@ public class PipelineGroupManager {
                 channelGroup.shutdown();
                 // Await termination of the channel group, allowing existing tasks to complete.
                 if (!channelGroup.awaitTermination(5, TimeUnit.SECONDS)) {
-                    System.err.println("Channel group did not terminate in time.");
+                    log.error("Channel group did not terminate in time.");
+                    //TODO add logging info of the  state of channel group
                     channelGroup.shutdownNow();
                 }
             } catch (IOException e) {
-                System.err.println("Error while shutting down channel group: " + e.getMessage());
+                log.info("Error while shutting down channel group: {}", e.getMessage());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // Re-interrupt the current thread
-                System.err.println("Channel group shutdown interrupted: " + e.getMessage());
+                log.error("Channel group shutdown interrupted: {}", e.getMessage());
             }
         }
 
@@ -60,12 +66,12 @@ public class PipelineGroupManager {
             try {
                 // Attendi che tutti i task in sospeso vengano completati, con un timeout
                 if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-                    System.err.println("Executor service did not terminate in time. Forcing shutdown.");
+                    log.error("Executor service did not terminate in time. Forcing shutdown.");
                     executorService.shutdownNow();
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                System.err.println("Executor service shutdown interrupted: " + e.getMessage());
+                log.error("Executor service shutdown interrupted: {}", e.getMessage());
             }
         }
     }
