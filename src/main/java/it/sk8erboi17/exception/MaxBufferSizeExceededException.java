@@ -2,7 +2,10 @@ package it.sk8erboi17.exception;
 
 public class MaxBufferSizeExceededException extends Exception {
 
-    public MaxBufferSizeExceededException() {
-        super("Packet rejected: buffer size exceeds maxBufferSize!");
+    public MaxBufferSizeExceededException(String message) {
+        super(message);
+    }
+    public MaxBufferSizeExceededException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

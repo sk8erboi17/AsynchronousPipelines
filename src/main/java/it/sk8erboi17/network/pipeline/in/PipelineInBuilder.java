@@ -14,9 +14,7 @@ import java.util.List;
 public class PipelineInBuilder {
 
     private final AsynchronousSocketChannel client;
-    private boolean allocateDirect = false;
     private int bufferSize = 8196;
-    private int nThreads = Runtime.getRuntime().availableProcessors();
     private AggregateCallback aggregateCallback;
 
     public PipelineInBuilder(AsynchronousSocketChannel client) {
@@ -28,23 +26,13 @@ public class PipelineInBuilder {
         return this;
     }
 
-    public PipelineInBuilder setNumberThreads(int nThreads){
-        this.nThreads = nThreads;
-        return this;
-    }
-
     public PipelineInBuilder setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
         return this;
     }
 
-    public PipelineInBuilder allocateDirect(boolean allocateDirect) {
-        this.allocateDirect = allocateDirect;
-        return this;
-    }
-
     public PipelineIn build() {
-        return new PipelineIn(client, allocateDirect, bufferSize, nThreads,aggregateCallback);
+        return new PipelineIn(client, aggregateCallback, bufferSize);
     }
 
 }

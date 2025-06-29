@@ -1,6 +1,6 @@
 package it.sk8erboi17.network.pipeline.out;
 
-import it.sk8erboi17.listeners.output.DataEncoder;
+import it.sk8erboi17.network.transformers.DataEncoder;
 import it.sk8erboi17.network.pipeline.out.content.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,22 +14,16 @@ import java.nio.channels.AsynchronousSocketChannel;
  */
 public class PipelineOut {
     private static final Logger log = LoggerFactory.getLogger(PipelineOut.class);
-    private final boolean allocateDirect;
-    private final int initBuffer;
-    private final boolean performResizing;
     private AsynchronousSocketChannel client;
     private DataEncoder dataEncoder;
 
-    public PipelineOut(AsynchronousSocketChannel client, boolean allocateDirect, int initBuffer, boolean performResizing) {
+    public PipelineOut(AsynchronousSocketChannel client) {
         this.client = client;
-        this.allocateDirect = allocateDirect;
-        this.initBuffer = initBuffer;
-        this.performResizing = performResizing;
     }
 
 
     public void handleRequest(Request request) {
-        dataEncoder = new DataEncoder(client, initBuffer, allocateDirect, performResizing);
+        dataEncoder = new DataEncoder(client);
         Object message = request.getMessage();
         switch (message) {
             case String s -> dataEncoder.sendString(s, request.getCallback());
@@ -53,7 +47,7 @@ public class PipelineOut {
         }
         this.client = newClient;
         if (this.client != null && this.client.isOpen()) {
-            this.dataEncoder = new DataEncoder(this.client, initBuffer, allocateDirect, performResizing); // new encoder
+            this.dataEncoder = new DataEncoder(this.client); // new encoder
         } else {
             this.dataEncoder = null;
         }

@@ -1,26 +1,56 @@
 package it.sk8erboi17.network.pipeline.in;
 
-import it.sk8erboi17.BufferBuilder;
-import it.sk8erboi17.listeners.input.DataDecoder;
+import it.sk8erboi17.listeners.input.operations.ListenData;
+import it.sk8erboi17.listeners.input.operations.SocketFrameDecoder;
 import it.sk8erboi17.listeners.response.Callback;
+import it.sk8erboi17.network.transformers.DataDecoder;
+import it.sk8erboi17.network.transformers.pool.ByteBuffersPool;
 
 import java.nio.channels.AsynchronousSocketChannel;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
- * The PipelineIn class manages the process of reading data from a client connection using an asynchronous data receiver. It initializes the data receiver with the necessary configurations and starts the reading process using a buffer.
+ * The PipelineIn class correctly initializes the entire inbound data pipeline
+ * for a SINGLE client connection. It wires together the necessary components and
+ * starts the asynchronous decoding process.
+ * An instance of this class should be created for each new client.
  */
 public class PipelineIn {
-    private static ExecutorService sharedPool;
-    private static DataDecoder dataDecoder;
 
-    // Constructor to initialize and start reading data
-    public PipelineIn(AsynchronousSocketChannel client, boolean allocateDirect, int frameLength, int nThreads, Callback callback) {
-        sharedPool = Executors.newFixedThreadPool(nThreads);
-        dataDecoder = new DataDecoder(client, frameLength, callback,sharedPool);
-        // Start reading data using a buffer created with BufferBuilder
-        dataDecoder.startRead(new BufferBuilder().setInitSize(frameLength).allocateDirect(allocateDirect).build());
+    // These fields are now INSTANCE fields, not static.
+    // They belong to a single client's pipeline.
+    private final SocketFrameDecoder frameDecoder;
+    private final DataDecoder dataDecoder;
+
+    /**
+     * Constructor to initialize and start the inbound data pipeline for a new client.
+     *
+     * @param client The newly accepted AsynchronousSocketChannel for the client.
+     * @param maxFrameLength The maximum allowed size for a single data frame, to configure the decoder.
+     */
+    public PipelineIn(AsynchronousSocketChannel client, Callback callback,int maxFrameLength) {
+        // --- 1. Create the business logic components ---
+        // ListenData contains the logic for what to do with a decoded message.
+        ListenData listenDataProcessor = new ListenData();
+
+        // The initial buffer size for the FrameDecoder can be a sensible default.
+        // This is for the internal reassembly buffer, NOT the read buffer.
+        int initialDecoderBufferSize = ByteBuffersPool.LARGE_SIZE;
+
+        // --- 2. Create the stateful frame decoder ---
+        // This object will live for the duration of the connection and manage frame reassembly.
+        this.frameDecoder = new SocketFrameDecoder(
+                initialDecoderBufferSize,
+                maxFrameLength,
+                listenDataProcessor
+        );
+
+        // --- 3. Create the stateless I/O engine ---
+        // Pass the channel and the frame decoder it needs to feed.
+        this.dataDecoder = new DataDecoder(client, callback, this.frameDecoder);
+
+        // --- 4. Start the engine! ---
+        // This kicks off the asynchronous read loop, which will now run for the
+        // lifetime of the connection.
+        this.dataDecoder.startDecoding();
     }
-
 }

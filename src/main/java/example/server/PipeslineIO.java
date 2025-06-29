@@ -35,9 +35,7 @@ public class PipeslineIO {
     private static PipelineOut buildPipelinesOut(AsynchronousSocketChannel client) {
         // Configure and create an output pipeline
         return new PipelineOutBuilder(client)
-                .allocateDirect(true) // Use direct memory for the buffer
-                .setBufferSize(4096 * 20) // Set the buffer size for sending data
-                .buildSocket(); // Build and initialize the output pipeline
+                .buildSocket();
     }
 
 }
