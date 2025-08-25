@@ -1,6 +1,5 @@
-package it.sk8erboi17.listeners.response.implementation;
+package it.sk8erboi17.listeners.response;
 
-import it.sk8erboi17.listeners.response.Callback;
 import java.util.function.Consumer;
 
 public class SimpleCallback implements Callback {

@@ -16,6 +16,10 @@ public class ListenData {
     private static final int CHAR_BYTES = Character.BYTES;
 
     public void listen(byte marker, ByteBuffer buffer, Callback callback) {
+        if (marker == 0x00) {
+            handleHeartbeat(callback);
+            return;
+        }
         if (buffer.remaining() == 0) {
             callback.completeExceptionally(new IllegalArgumentException("The provided buffer is empty. Cannot process data."));
             return;
@@ -38,11 +42,24 @@ public class ListenData {
         }
     }
 
+    private void handleHeartbeat(Callback callback) {
+        // No data needs to be processed for a heartbeat.
+        callback.complete(null);
+    }
+
     private void handleString(ByteBuffer buffer, Callback callback) {
-        int length = buffer.getInt();
-        if (length < 0 || length > buffer.remaining()) {
-            throw new ProtocolViolationException("Invalid length " + length + " (remaining length: " + buffer.remaining() + ")");
+        if (buffer.remaining() < INT_BYTES) {
+            throw new BufferUnderflowException();
         }
+        int length = buffer.getInt();
+
+        if (length < 0) {
+            throw new ProtocolViolationException("Protocol violation: Invalid negative string length received: " + length);
+        }
+        if (length > buffer.remaining()) {
+            throw new ProtocolViolationException("Protocol violation: Stated string length " + length + " is greater than remaining buffer size " + buffer.remaining());
+        }
+
 
         byte[] stringBytes = new byte[length];
         buffer.get(stringBytes);
@@ -83,9 +100,16 @@ public class ListenData {
     }
 
     private void handleByteArray(ByteBuffer buffer, Callback callback) {
+        if (buffer.remaining() < INT_BYTES) {
+            throw new BufferUnderflowException();
+        }
         int length = buffer.getInt();
-        if (length < 0 || length > buffer.remaining()) {
-            throw new ProtocolViolationException("Invalid length " + length + " (remaining length: " + buffer.remaining() + ")");
+
+        if (length < 0) {
+            throw new ProtocolViolationException("Protocol violation: Invalid negative byte array length received: " + length);
+        }
+        if (length > buffer.remaining()) {
+            throw new ProtocolViolationException("Protocol violation: Stated byte array length " + length + " is greater than remaining buffer size " + buffer.remaining());
         }
 
         byte[] data = new byte[length];

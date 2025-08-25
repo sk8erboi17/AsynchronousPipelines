@@ -1,9 +1,9 @@
 package it.sk8erboi17.network.pipeline.in;
 
 import it.sk8erboi17.listeners.input.operations.ListenData;
-import it.sk8erboi17.listeners.input.operations.SocketFrameDecoder;
+import it.sk8erboi17.network.transformers.decoder.op.FrameDecoder;
 import it.sk8erboi17.listeners.response.Callback;
-import it.sk8erboi17.network.transformers.DataDecoder;
+import it.sk8erboi17.network.transformers.decoder.DataDecoder;
 import it.sk8erboi17.network.transformers.pool.ByteBuffersPool;
 
 import java.nio.channels.AsynchronousSocketChannel;
@@ -15,11 +15,6 @@ import java.nio.channels.AsynchronousSocketChannel;
  * An instance of this class should be created for each new client.
  */
 public class PipelineIn {
-
-    // These fields are now INSTANCE fields, not static.
-    // They belong to a single client's pipeline.
-    private final SocketFrameDecoder frameDecoder;
-    private final DataDecoder dataDecoder;
 
     /**
      * Constructor to initialize and start the inbound data pipeline for a new client.
@@ -38,7 +33,9 @@ public class PipelineIn {
 
         // --- 2. Create the stateful frame decoder ---
         // This object will live for the duration of the connection and manage frame reassembly.
-        this.frameDecoder = new SocketFrameDecoder(
+        // These fields are now INSTANCE fields, not static.
+        // They belong to a single client's pipeline.
+        FrameDecoder frameDecoder = new FrameDecoder(
                 initialDecoderBufferSize,
                 maxFrameLength,
                 listenDataProcessor
@@ -46,11 +43,11 @@ public class PipelineIn {
 
         // --- 3. Create the stateless I/O engine ---
         // Pass the channel and the frame decoder it needs to feed.
-        this.dataDecoder = new DataDecoder(client, callback, this.frameDecoder);
+        DataDecoder dataDecoder = new DataDecoder(client, callback, frameDecoder);
 
         // --- 4. Start the engine! ---
         // This kicks off the asynchronous read loop, which will now run for the
         // lifetime of the connection.
-        this.dataDecoder.startDecoding();
+        dataDecoder.startDecoding();
     }
 }

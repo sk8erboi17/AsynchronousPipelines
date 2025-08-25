@@ -1,10 +1,11 @@
-package it.sk8erboi17.network.transformers;
+package it.sk8erboi17.network.transformers.decoder;
 
 import it.sk8erboi17.exception.MaxBufferSizeExceededException;
-import it.sk8erboi17.listeners.input.operations.SocketFrameDecoder;
+import it.sk8erboi17.network.transformers.decoder.op.FrameDecoder;
 import it.sk8erboi17.listeners.output.AsyncChannelSocket;
 import it.sk8erboi17.listeners.response.Callback;
 import it.sk8erboi17.network.transformers.pool.ByteBuffersPool; // Make sure this package is correct
+import it.sk8erboi17.utils.FailWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.nio.channels.InterruptedByTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Acts as a stateless I/O engine that feeds a stateful SocketFrameDecoder.
@@ -24,11 +27,11 @@ public class DataDecoder {
     private static final Logger log = LoggerFactory.getLogger(DataDecoder.class);
 
     private final AsynchronousSocketChannel socketChannel;
-    private final SocketFrameDecoder frameDecoder;
+    private final FrameDecoder frameDecoder;
     private final ByteBuffersPool pool;
     private final Callback callback;
 
-    public DataDecoder(AsynchronousSocketChannel socketChannel,Callback callback, SocketFrameDecoder frameDecoder) {
+    public DataDecoder(AsynchronousSocketChannel socketChannel,Callback callback, FrameDecoder frameDecoder) {
         if (socketChannel == null || frameDecoder == null) {
             throw new IllegalArgumentException("Channel and FrameDecoder cannot be null.");
         }
@@ -56,16 +59,22 @@ public class DataDecoder {
         ByteBuffer tempReadBuffer;
         try {
             // Acquire a fresh, temporary buffer for this specific read operation.
-            tempReadBuffer = context.pool.acquire(ByteBuffersPool.LARGE_SIZE);
+            tempReadBuffer = context.getPool().acquire(ByteBuffersPool.LARGE_SIZE);
         } catch (InterruptedException | MaxBufferSizeExceededException e) {
-            log.error("Failed to acquire buffer for read operation. Closing connection for {}.", getRemoteAddressSafe(context.channel), e);
-            AsyncChannelSocket.closeChannelSocketChannel(context.channel);
+            log.error("Failed to acquire buffer for read operation. Closing connection for {}.", getRemoteAddressSafe(context.getChannel()), e);
+            FailWriter.writeFile("Failed to acquire buffer for read operation. Closing connection for " +getRemoteAddressSafe(context.getChannel()), e);
+            AsyncChannelSocket.closeChannelSocketChannel(context.getChannel());
             // No buffer was acquired, so nothing to release.
             return;
         }
 
         ReadOperationContext operationContext = new ReadOperationContext(context, tempReadBuffer);
-        context.channel.read(tempReadBuffer, operationContext, readCompletionHandler);
+        context.getChannel().read(
+                tempReadBuffer,
+                15, TimeUnit.SECONDS, // if client send no hearthbeat is dead
+                operationContext,
+                readCompletionHandler
+        );
     }
 
     private static String getRemoteAddressSafe(AsynchronousSocketChannel channel) {
@@ -75,16 +84,6 @@ public class DataDecoder {
             return "Unknown Client";
         }
     }
-
-    /**
-     * Holds the long-lived, stateful components for the entire connection.
-     */
-    private record ReadContext(
-            AsynchronousSocketChannel channel,
-            SocketFrameDecoder frameDecoder,
-            Callback callback,
-            ByteBuffersPool pool
-    ) {}
 
     /**
      * Holds the context for a single read operation, including the temporary buffer.
@@ -101,23 +100,24 @@ public class DataDecoder {
                     ReadContext context = opContext.parentContext;
                     ByteBuffer buffer = opContext.buffer;
 
-                    if (bytesRead == -1) {
-                        log.info("Client {} disconnected.", getRemoteAddressSafe(context.channel));
-                        context.frameDecoder.onClientDisconnected(context.channel);
-                        releaseBuffer(context.pool, buffer);
-                        AsyncChannelSocket.closeChannelSocketChannel(context.channel);
+                     if (bytesRead == -1) {
+                        log.info("Client {} disconnected.", getRemoteAddressSafe(context.getChannel()));
+                        context.getFrameDecoder().onClientDisconnected(context.getChannel());
+                        releaseBuffer(context.getPool(), buffer);
+                        AsyncChannelSocket.closeChannelSocketChannel(context.getChannel());
                         return;
                     }
 
+
                     try {
                         // Pass the newly read data to the stateful frame decoder.
-                        context.frameDecoder.decode(context.channel, buffer, opContext.parentContext().callback);
+                        context.getFrameDecoder().decode(context.getChannel(), buffer, opContext.parentContext().getCallback());
                     } catch (Exception e) {
-                        log.error("Frame decoder threw an exception for client {}. Closing connection.", getRemoteAddressSafe(context.channel), e);
-                        failed(e, opContext); // Treat as a failure.
+                        FailWriter.writeFile("Frame decoder threw an exception for client " + getRemoteAddressSafe(context.getChannel()) + ". Closing connection.", e);
+                        failed(e, opContext);
                         return;
                     } finally {
-                        releaseBuffer(context.pool, buffer);
+                        releaseBuffer(context.getPool(), buffer);
                     }
 
                     // Re-arm the loop for the next read, which will acquire a new buffer.
@@ -128,15 +128,18 @@ public class DataDecoder {
                 public void failed(Throwable exc, ReadOperationContext opContext) {
                     ReadContext context = opContext.parentContext;
 
-                    if (exc instanceof AsynchronousCloseException) {
-                        log.info("Connection to {} was closed during read.", getRemoteAddressSafe(context.channel));
+                    if (exc instanceof InterruptedByTimeoutException) {
+                        log.warn("Timeout: Client {} inactive.", getRemoteAddressSafe(context.getChannel()));
+                    } else if (exc instanceof AsynchronousCloseException) {                        log.info("Connection to {} was closed during read.", getRemoteAddressSafe(context.getChannel()));
+                        FailWriter.writeFile("Connection to "+ getRemoteAddressSafe(context.getChannel()) +" was closed during read.", exc);
                     } else {
-                        log.error("Read operation failed for client {}: {}", getRemoteAddressSafe(context.channel), exc.getMessage(), exc);
+                        log.error("Read operation failed for client {}: {}", getRemoteAddressSafe(context.getChannel()), exc.getMessage(), exc);
+                        FailWriter.writeFile("Read operation failed for client "+ getRemoteAddressSafe(context.getChannel()), exc);
                     }
 
-                    releaseBuffer(context.pool, opContext.buffer);
-                    context.frameDecoder.onClientDisconnected(context.channel);
-                    AsyncChannelSocket.closeChannelSocketChannel(context.channel);
+                    releaseBuffer(context.getPool(), opContext.buffer);
+                    context.getFrameDecoder().onClientDisconnected(context.getChannel());
+                    AsyncChannelSocket.closeChannelSocketChannel(context.getChannel());
                 }
 
                 private static void releaseBuffer(ByteBuffersPool pool, ByteBuffer buffer) {
@@ -146,6 +149,7 @@ public class DataDecoder {
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                             log.error("Thread interrupted while releasing buffer", e);
+                            FailWriter.writeFile("Thread interrupted while releasing buffer", e);
                         }
                     }
                 }

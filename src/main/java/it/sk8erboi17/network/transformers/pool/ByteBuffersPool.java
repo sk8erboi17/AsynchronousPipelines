@@ -2,6 +2,7 @@ package it.sk8erboi17.network.transformers.pool;
 
 import it.sk8erboi17.exception.IllegalSizeException;
 import it.sk8erboi17.exception.MaxBufferSizeExceededException;
+import it.sk8erboi17.utils.FailWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class ByteBuffersPool {
+    public class ByteBuffersPool {
     private static final ByteBuffersPool instance = new ByteBuffersPool();
 
     private static final int POOL_SIZE = 40;
@@ -30,6 +31,7 @@ public class ByteBuffersPool {
                 largeBuffers.put(ByteBuffer.allocateDirect(LARGE_SIZE));
             } catch (InterruptedException e) {
                 log.error("Error while creating pool {} ", e.getMessage(),e);
+                FailWriter.writeFile("Error while creating pool ", e);
                 Thread.currentThread().interrupt();
 
             }
@@ -37,7 +39,7 @@ public class ByteBuffersPool {
     }
 
     public ByteBuffer acquire(int size) throws InterruptedException, MaxBufferSizeExceededException {
-        ByteBuffer byteBuffer = null;
+        ByteBuffer byteBuffer;
         if(size <= SMALL_SIZE){
             byteBuffer = smallBuffers.take();
         }else if(size <= MEDIUM_SIZE){
@@ -46,10 +48,6 @@ public class ByteBuffersPool {
             byteBuffer = largeBuffers.take();
         }else {
             throw new MaxBufferSizeExceededException("Dimensione richiesta (" + size + ") non valida o supera la massima consentita (" + LARGE_SIZE + ")");
-        }
-
-        if(byteBuffer == null) {
-            throw new NullPointerException("Null buffer size");
         }
 
         byteBuffer.clear();
@@ -62,21 +60,20 @@ public class ByteBuffersPool {
         }
         int size = byteBuffer.capacity();
 
-        if(size == SMALL_SIZE){
+        if (size != SMALL_SIZE && size != MEDIUM_SIZE && size != LARGE_SIZE)  {
+            throw new IllegalArgumentException("Attempted to release a buffer with an illegal capacity: " + size);
+        }
+
+        if (size == SMALL_SIZE) {
             smallBuffers.put(byteBuffer);
-        }else if(size == MEDIUM_SIZE){
+        } else if (size == MEDIUM_SIZE) {
             mediumBuffers.put(byteBuffer);
-        }else if(size == LARGE_SIZE){
+        } else {
             largeBuffers.put(byteBuffer);
-        }else {
-            try {
-                throw new IllegalSizeException("Illegal buffer size");
-            } catch (IllegalSizeException e) {
-                log.error("Error while releasing {}", e.getMessage(), e);
-            }
         }
 
     }
+
 
     public static ByteBuffersPool getInstance() {
         return instance;

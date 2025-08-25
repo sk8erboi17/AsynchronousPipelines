@@ -1,6 +1,5 @@
 package it.sk8erboi17.listeners.response;
 
-import it.sk8erboi17.listeners.response.implementation.SimpleCallback;
 import java.util.function.Consumer;
 
 /**

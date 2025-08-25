@@ -1,8 +1,10 @@
 package it.sk8erboi17.listeners.group;
 
+import it.sk8erboi17.utils.FailWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousChannelGroup;
@@ -26,6 +28,7 @@ public class PipelineGroupManager {
             channelGroup = AsynchronousChannelGroup.withThreadPool(executorService);
         } catch (IOException e) {
             log.error("Error with the pipeline group manager :  {}" , e.getMessage() , e);
+            FailWriter.writeFile("Error with the pipeline group manager :  " , e);
         }
     }
 
@@ -49,15 +52,17 @@ public class PipelineGroupManager {
                 channelGroup.shutdown();
                 // Await termination of the channel group, allowing existing tasks to complete.
                 if (!channelGroup.awaitTermination(5, TimeUnit.SECONDS)) {
-                    log.error("Channel group did not terminate in time.");
+                    log.info("Channel group did not terminate in time.");
                     //TODO add logging info of the  state of channel group
                     channelGroup.shutdownNow();
                 }
             } catch (IOException e) {
-                log.info("Error while shutting down channel group: {}", e.getMessage());
+                log.error("Error while shutting down channel group: {}", e.getMessage());
+                FailWriter.writeFile("Error while shutting down channel group: ", e);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // Re-interrupt the current thread
                 log.error("Channel group shutdown interrupted: {}", e.getMessage());
+                FailWriter.writeFile("Channel group shutdown interrupted: ", e);
             }
         }
 
@@ -72,6 +77,7 @@ public class PipelineGroupManager {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 log.error("Executor service shutdown interrupted: {}", e.getMessage());
+                FailWriter.writeFile("Executor service shutdown interrupted: ", e);
             }
         }
     }
